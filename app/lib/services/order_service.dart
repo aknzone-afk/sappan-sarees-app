@@ -972,7 +972,7 @@ class OrderService {
       if (it.price != null) '₹${it.price}',
       it.pick != null ? '${it.pick} (${it.qty} pcs)' : '${it.qty} pcs',
     ];
-    final folder = it.folder.split('/').where((s) => s.isNotEmpty).join(' › ');
+    final folder = retailText(it.folder.split('/').where((s) => s.isNotEmpty).join(' › '));
     return folder.isEmpty ? parts.join(' · ') : '${parts.join(' · ')}\n$folder';
   }
 

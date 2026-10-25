@@ -37,7 +37,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       if (pk != null && !pk.isEmpty) {
         return (price: p.price, qty: pk.minTotal(count), sure: pk.exact(count));
       }
-      final n = marks[p.id] ?? count;
+      final n = marks[p.id] ?? 1; // Sappan retail: 1 saree by default
       return (price: p.price, qty: n ?? 1, sure: n != null);
     }));
     final parcel = OrderService.activeParcel(ref.read(sharedPreferencesProvider),
@@ -264,7 +264,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                             sure: pk.exact(count)
                           );
                         }
-                        final n = marks[p.id] ?? count;
+                        final n = marks[p.id] ?? 1; // Sappan retail: 1 saree by default
                         return (price: p.price, qty: n ?? 1, sure: n != null);
                       }));
                       return Padding(

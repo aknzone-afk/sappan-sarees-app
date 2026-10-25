@@ -32,7 +32,7 @@ const int kDetailImageWidth = 2000;
 
 /// App branding.
 const String kAppTitle = 'SAPPAN SAREES';
-const String kBrandSubtitle = 'SAREES DIRECT FROM SURAT';
+const String kBrandSubtitle = 'THE FINEST WEAVES OF INDIA';
 
 /// Default WhatsApp number for the "Contact us" CTA (international format,
 /// no leading +). Leave empty to hide the contact button.
@@ -146,4 +146,25 @@ const bool kNoMinimumOrder = true;
 const String kSappanAppKey = 'sappan-retail-app-2026';
 
 /// True when [wholesale] may be shown / sold in the retail app.
+/// Owner 25-Oct-2026: a pan-India luxury house — every region's speciality
+/// (worded as weaves / styles, never a claim of where a saree was made).
+const List<({String weave, String region})> kHeritageWeaves = [
+  (weave: 'Banarasi Brocades', region: 'Varanasi'),
+  (weave: 'Tant & Garad', region: 'Kolkata'),
+  (weave: 'Kota Doria', region: 'Rajasthan'),
+  (weave: 'Paithani', region: 'Pune & Maharashtra'),
+  (weave: 'Kanjivaram Silks', region: 'Tamil Nadu'),
+  (weave: 'Chanderi', region: 'Madhya Pradesh'),
+  (weave: 'Pochampally Ikat', region: 'Telangana'),
+  (weave: 'Bandhani & Leheriya', region: 'Rajasthan'),
+  (weave: 'Mysore Silk', region: 'Karnataka'),
+  (weave: 'Muga & Mekhela', region: 'Assam'),
+];
+
+/// Folder / label text with every rupee amount doubled ("WORK ABOVE RS 1300"
+/// → "WORK ABOVE RS 2600") — the shop's folder names carry wholesale bands.
+String retailText(String s) => s.replaceAllMapped(
+    RegExp(r'((?:RS|Rs|rs|₹)\.?\s*)(\d{2,6})'),
+    (m) => '${m[1]}${int.parse(m[2]!) * kRetailMultiplier}');
+
 bool retailVisible(int? wholesale) => wholesale != null && wholesale >= kRetailMinWholesale;

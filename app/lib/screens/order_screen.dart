@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../config.dart';
 import '../models/order.dart';
 import '../models/photo.dart';
 import '../providers/providers.dart';
@@ -388,7 +389,8 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     final pk = ref.read(picksProvider)[p.id];
     // Tap-select wins over marks / photo count; sets are never dropped.
     if (pk != null && !pk.isEmpty) return pk.minTotal(count);
-    return ref.read(marksProvider)[p.id] ?? count ?? 1;
+    // Sappan retail: one saree unless the customer chose colours / pieces.
+    return ref.read(marksProvider)[p.id] ?? 1;
   }
 
   bool _qtySure(Photo p) {
@@ -396,7 +398,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     final count = ref.read(piecesProvider.notifier).piecesFor(p);
     final pk = ref.read(picksProvider)[p.id];
     if (pk != null && !pk.isEmpty) return pk.exact(count);
-    return ref.read(marksProvider).containsKey(p.id) || count != null;
+    return true; // retail: the quantity is always what the customer chose (default 1)
   }
 
   String _marksSig = '';
@@ -936,7 +938,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                   _SectionTitle(t('1 · Your designs (${photos.length})', '1 · आपके डिज़ाइन (${photos.length})')),
                   const SizedBox(height: 4),
                   Text(
-                      t('Pieces = sarees in the photo. Change with + / − if you want more or less.', 'पीस = फ़ोटो में जितनी साड़ियाँ। कम-ज़्यादा के लिए + / − दबाएँ।'),
+                      t('1 saree of each design. Tap the photo to choose colours, or use + / − for more.', 'हर डिज़ाइन की 1 साड़ी। रंग चुनने के लिए फ़ोटो दबाएँ, ज़्यादा के लिए + / −।'),
                       style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
                   for (final p in photos)
@@ -1138,7 +1140,7 @@ class _ItemRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final folder =
-        photo.folder.split('/').where((s) => s.isNotEmpty).join(' › ');
+        retailText(photo.folder.split('/').where((s) => s.isNotEmpty).join(' › '));
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(

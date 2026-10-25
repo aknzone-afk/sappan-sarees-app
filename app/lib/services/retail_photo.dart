@@ -17,14 +17,16 @@ import 'price_markup.dart';
 /// so the stored price stays wholesale and is doubled exactly once.
 class RetailPhotoFileService extends FileService {
   final HttpFileService _http = HttpFileService();
-  static final PriceMarkup _markup = PriceMarkup();
+  /// Two repaint lanes (each with its own text reader): fast enough for the
+  /// first screen, light enough for a fresh install's memory.
+  static final List<PriceMarkup> _markups = [PriceMarkup(), PriceMarkup()];
+  static final List<Future<void>> _lanes = [Future.value(), Future.value()];
+  static int _next = 0;
 
-  /// ML Kit + canvas work one photo at a time (memory on a fresh install).
-  static Future<void> _tail = Future.value();
-
-  static Future<T> _oneAtATime<T>(Future<T> Function() task) {
-    final run = _tail.then((_) => task());
-    _tail = run.then((_) {}, onError: (_) {});
+  static Future<T> _inLane<T>(Future<T> Function(PriceMarkup mk) task) {
+    final i = _next++ % _lanes.length;
+    final run = _lanes[i].then((_) => task(_markups[i]));
+    _lanes[i] = run.then((_) {}, onError: (_) {});
     return run;
   }
 
@@ -41,15 +43,15 @@ class RetailPhotoFileService extends FileService {
       chunks.addAll(c);
     }
     final raw = Uint8List.fromList(chunks);
-    final out = await _oneAtATime(() => repaint(raw, url.hashCode.toString()));
+    final out = await _inLane((mk) => repaint(raw, url.hashCode.toString(), markup: mk));
     return _BytesResponse(res, out);
   }
 
   /// [bytes] with its printed price replaced by the retail price (JPEG).
   /// The original bytes when no printed price is found or anything fails.
-  static Future<Uint8List> repaint(Uint8List bytes, String key) async {
+  static Future<Uint8List> repaint(Uint8List bytes, String key, {PriceMarkup? markup}) async {
     try {
-      final png = await _markup.apply(
+      final png = await (markup ?? _markups[0]).apply(
         imageBytes: bytes,
         knownPrice: 0,
         percent: (kRetailMultiplier - 1) * 100.0,

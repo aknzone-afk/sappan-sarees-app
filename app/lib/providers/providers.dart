@@ -925,10 +925,14 @@ Future<void> _prefetchAllThumbnails(Ref ref, Iterable<String> photoIds) async {
     // don't saturate the pipe and starve UI image loads the user actually
     // triggers via taps. Once this completes the full-screen viewer needs
     // zero network for any photo in the catalog.
-    final details = ids
-        .map((id) => DriveUrls.thumbnail(id, width: kDetailImageWidth))
-        .toList(growable: false);
-    await warmList(details, 6);
+    // Sappan: full-size photos are repainted with the retail price, so they
+    // are fetched only when a customer opens the design (not all in advance).
+    if (!kNoMinimumOrder) {
+      final details = ids
+          .map((id) => DriveUrls.thumbnail(id, width: kDetailImageWidth))
+          .toList(growable: false);
+      await warmList(details, 6);
+    }
   } finally {
     _allThumbsPrefetchInFlight = false;
   }

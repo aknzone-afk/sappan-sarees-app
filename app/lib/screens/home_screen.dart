@@ -9,6 +9,7 @@ import '../config.dart';
 import '../models/folder.dart';
 import '../providers/providers.dart';
 import 'tutorial_screen.dart';
+import 'retail_signup_screen.dart' show HeritageWeaves;
 import 'daily_feed_screen.dart';
 import '../widgets/bar_button.dart';
 import '../widgets/filter_sheet.dart';
@@ -332,9 +333,6 @@ Widget _cartIconWithBadge(BuildContext context, int count) {
 /// Shop contact + address card surfaced when the customer taps the brand
 /// title on the home AppBar. Phone number and map link are tap-through.
 void _showShopInfo(BuildContext context) {
-  const address =
-      '4001-22, 3rd Floor,\nSai Krupa Market,\nRing Road, Surat — 395002';
-  const mapsUrl = 'https://maps.app.goo.gl/ZDC7mJpa3jKkJxaU8';
   const phone = '7016638059';
 
   // Tester 13-Oct: launch directly (like advance_screen) instead of gating on
@@ -358,39 +356,14 @@ void _showShopInfo(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.place_rounded, color: scheme.primary, size: 22),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: UText(
-                    address,
-                    style: TextStyle(fontSize: 14, height: 1.4),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: () => openUrl(mapsUrl),
-              child: Row(
-                children: [
-                  Icon(Icons.map_rounded, color: scheme.primary, size: 22),
-                  const SizedBox(width: 10),
-                  UText(
-                    'Open in Google Maps',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: scheme.primary,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ],
-              ),
+            const Text(
+              'Luxury sarees inspired by the great weaving traditions of India — '
+              'delivered to your door, anywhere in the country.',
+              style: TextStyle(fontSize: 14, height: 1.5),
             ),
             const SizedBox(height: 14),
+            const HeritageWeaves(),
+            const SizedBox(height: 16),
             InkWell(
               onTap: () => openUrl('tel:$phone'),
               child: Row(

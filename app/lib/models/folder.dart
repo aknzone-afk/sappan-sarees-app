@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../config.dart';
 
 @immutable
 class CatalogFolder {
@@ -25,7 +26,8 @@ class CatalogFolder {
   String get displayName {
     if (path.isEmpty) return 'Catalog';
     final i = path.lastIndexOf('/');
-    return i == -1 ? path : path.substring(i + 1);
+    // Sappan: wholesale price bands in folder names shown at retail.
+    return retailText(i == -1 ? path : path.substring(i + 1));
   }
 
   int get depth => path.isEmpty ? 0 : path.split('/').length;

@@ -163,17 +163,28 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'Playfair',
-                          fontSize: 28,
+                          fontSize: 30,
                           fontWeight: FontWeight.w700,
-                          letterSpacing: 1.5,
-                          color: kInk),
+                          letterSpacing: 2.2,
+                          color: kMaroon),
                     ),
                     const SizedBox(height: 6),
                     const Text(
-                      'Sarees direct from Surat — order even one saree.',
+                      'THE FINEST WEAVES OF INDIA',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, height: 1.4),
+                      style: TextStyle(
+                          fontSize: 11.5, fontWeight: FontWeight.w700, letterSpacing: 3.2, color: kGold),
                     ),
+                    const SizedBox(height: 14),
+                    const Text(
+                      'A curated house of luxury sarees, inspired by the great weaving '
+                      'traditions of India — delivered to your door, anywhere in the country. '
+                      'Begin with just one saree.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14.5, height: 1.55, color: kInk),
+                    ),
+                    const SizedBox(height: 16),
+                    const HeritageWeaves(),
                     const SizedBox(height: 26),
                     const Text('Sign up — takes 30 seconds',
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
@@ -245,6 +256,39 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// India's great weaves, one gold-edged card each (signup + shop card).
+class HeritageWeaves extends StatelessWidget {
+  const HeritageWeaves({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final w in kHeritageWeaves)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: kLinen,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: kGold, width: 0.8),
+            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text(w.weave,
+                  style: const TextStyle(
+                      fontFamily: 'Playfair', fontSize: 13.5, fontWeight: FontWeight.w700, color: kMaroon)),
+              const SizedBox(height: 1),
+              Text(w.region.toUpperCase(),
+                  style: const TextStyle(fontSize: 9.5, letterSpacing: 1.6, color: kInk)),
+            ]),
+          ),
+      ],
     );
   }
 }
