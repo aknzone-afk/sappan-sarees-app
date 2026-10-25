@@ -211,7 +211,23 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
         ),
       ]),
       body: orders.isEmpty
-          ? Center(child: UText(t('No orders yet.', 'अभी कोई ऑर्डर नहीं।')))
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(Icons.shopping_bag_outlined, size: 44, color: Color(0xFFC6A15B)),
+                  const SizedBox(height: 16),
+                  const Text('Your orders will appear here',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontFamily: 'Playfair', fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF5E0B1F))),
+                  const SizedBox(height: 8),
+                  const Text('Discover the finest weaves of India — begin with just one saree.',
+                      textAlign: TextAlign.center, style: TextStyle(fontSize: 14, height: 1.5)),
+                  const SizedBox(height: 20),
+                  OutlinedButton(onPressed: () => context.go('/'), child: const Text('DISCOVER THE COLLECTION')),
+                ]),
+              ),
+            )
           : ListView.separated(
               padding: const EdgeInsets.all(12),
               itemCount: orders.length,

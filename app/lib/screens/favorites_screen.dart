@@ -212,17 +212,19 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.shopping_cart_outlined,
-                        size: 56, color: scheme.outline),
+                    const Icon(Icons.shopping_bag_outlined, size: 48, color: Color(0xFFC6A15B)),
                     const SizedBox(height: 12),
-                    UText(t('Your shopping bag is empty.', 'आपका बैग खाली है।'),
-                        style: Theme.of(context).textTheme.titleMedium),
+                    Text(t('Your shopping bag is empty', 'आपका बैग खाली है'),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontFamily: 'Playfair', fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF5E0B1F))),
                     const SizedBox(height: 4),
-                    UText(
-                      t('Tap the cart icon on any photo to add it here.', 'किसी भी डिज़ाइन पर "सिलेक्ट करें" दबाएँ।'),
+                    Text(
+                      t('Tap CHOOSE COLOUR on any design to add it here.', 'किसी भी डिज़ाइन पर "रंग चुनें" दबाएँ।'),
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: const TextStyle(fontSize: 14, height: 1.5),
                     ),
+                    const SizedBox(height: 20),
+                    OutlinedButton(onPressed: () => context.go('/'), child: const Text('DISCOVER THE COLLECTION')),
                   ],
                 ),
               ),
