@@ -62,7 +62,7 @@ class MinOrderBar extends StatelessWidget {
         ),
       );
     }
-    const ok = Color(0xFF2E7D32);
+    const ok = Color(0xFF5E0B1F); // Sappan wine
     // Green ONLY when the value really reached the minimum (owner: it said
     // "reached" at ₹10,405 when a design had no readable price).
     final done = amount >= kMinOrderValue;

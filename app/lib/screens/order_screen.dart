@@ -685,7 +685,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                 'आपका ऑर्डर लग जाएगा। सब सही हो तभी YES दबाएँ।')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('NO')),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('YES, PLACE ORDER')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('YES, CONFIRM ORDER')),
         ],
       ),
     );
@@ -795,7 +795,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           title: Text(t('Order not placed yet', 'ऑर्डर अभी नहीं हुआ')),
           content: Text(t(
               '${miss.designs.length} photo(s) could not be downloaded: '
-                  '$names$more\n\nPlease check your internet and tap Place order again. Your cart is safe.',
+                  '$names$more\n\nPlease check your internet and tap Confirm order again. Your bag is safe.',
               '${miss.designs.length} फोटो डाउनलोड नहीं हुई: $names$more\n\n'
                   'इंटरनेट जाँचें और फिर से ऑर्डर भेजें दबाएँ। आपका कार्ट सुरक्षित है।')),
           actions: [
@@ -926,9 +926,9 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: UText(t('Place order', 'ऑर्डर करें'))),
+          title: UText(t('Checkout', 'चेकआउट'))),
       body: photos.isEmpty
-          ? Center(child: UText(t('Your cart is empty.', 'कार्ट खाली है।')))
+          ? Center(child: UText(t('Your shopping bag is empty.', 'आपका बैग खाली है।')))
           : Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -1089,7 +1089,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                     label: UText(
                       value.below
                           ? t('First complete ${MinOrderBar.minLabel} — select more', 'पहले ${MinOrderBar.minLabel} पूरा करें — और चुनें')
-                          : t('Place order · ${photos.length} design${photos.length == 1 ? '' : 's'} · $pcs pcs', 'ऑर्डर भेजें · ${photos.length} डिज़ाइन · $pcs पीस'),
+                          : t('Confirm order · ${photos.length} design${photos.length == 1 ? '' : 's'} · $pcs pcs', 'ऑर्डर भेजें · ${photos.length} डिज़ाइन · $pcs पीस'),
                       style: const TextStyle(
                           fontWeight: FontWeight.w700, letterSpacing: 0.4),
                     ),
@@ -1360,7 +1360,7 @@ class _TransportField extends StatelessWidget {
                     // Owner: GST no. beside the name so a new party isn't confused.
                     subtitle: g != null
                         ? Text('GST $g',
-                            style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF1B5E20)))
+                            style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF3F0614)))
                         : null,
                     onTap: () => onSelected(list[i]),
                   );
@@ -1391,7 +1391,7 @@ class _TransportHelp extends StatelessWidget {
     final gst = transport.trim().isEmpty ? null : i.gstOf(transport);
     final goes = transport.trim().isEmpty ? const <(String, int)>[] : i.placesOf(transport);
     final usual = i.forPlace(place);
-    const green = Color(0xFF1B5E20);
+    const green = Color(0xFF3F0614);
     if (gst == null && goes.isEmpty && usual.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 6, 4, 0),

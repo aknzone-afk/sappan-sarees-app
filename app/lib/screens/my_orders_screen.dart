@@ -261,7 +261,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: FilledButton.icon(
-                              style: FilledButton.styleFrom(backgroundColor: const Color(0xFF1B8E3A)),
+                              style: FilledButton.styleFrom(backgroundColor: const Color(0xFF5E0B1F)),
                               onPressed: () => context.push('/advance/${Uri.encodeComponent(o.number)}'),
                               icon: const Icon(Icons.payments_rounded, size: 18),
                               label: const Text('PAY 10% TOKEN TO PROCESS ORDER'),
@@ -330,7 +330,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                    color: const Color(0xFF1B8E3A), borderRadius: BorderRadius.circular(10)),
+                                    color: const Color(0xFF5E0B1F), borderRadius: BorderRadius.circular(10)),
                                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                                   const HelplineIcon(size: 18),
                                   const SizedBox(width: 4),
@@ -431,13 +431,13 @@ class _Steps extends StatelessWidget {
           Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(done ? Icons.check_circle_rounded : Icons.radio_button_unchecked,
                 size: 22,
-                color: done ? const Color(0xFF1B8E3A) : Colors.black26),
+                color: done ? const Color(0xFF5E0B1F) : Colors.black26),
             const SizedBox(width: 4),
             Text(name,
                 style: TextStyle(
                     fontWeight: done || name.startsWith('✗') ? FontWeight.w700 : FontWeight.w400,
                     color: done
-                        ? const Color(0xFF1B8E3A)
+                        ? const Color(0xFF5E0B1F)
                         : (name.startsWith('✗') ? const Color(0xFFC62828) : Colors.black45))),
           ]),
       ],

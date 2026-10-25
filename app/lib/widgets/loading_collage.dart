@@ -386,30 +386,30 @@ class _GlassPanel extends StatelessWidget {
     final String subtitle;
     if (phase == ScrapePhase.pricing) {
       subtitle = ocrTotal == 0
-          ? 'READING PRICES…'
-          : 'READING PRICES — $ocrReady / $ocrTotal';
+          ? 'CURATING THE COLLECTION…'
+          : 'CURATING THE COLLECTION — $ocrReady / $ocrTotal';
     } else if (phase == ScrapePhase.preparing) {
       subtitle = coversTotal == 0
-          ? 'PREPARING DESIGNS…'
-          : 'PREPARING DESIGNS — $coversReady / $coversTotal';
+          ? 'PREPARING THE LOOKBOOK…'
+          : 'PREPARING THE LOOKBOOK — $coversReady / $coversTotal';
     } else if (folders == 0) {
       subtitle = 'CONNECTING…';
     } else {
       subtitle =
-          '$folders FOLDER${folders == 1 ? '' : 'S'} • $photos DESIGN${photos == 1 ? '' : 'S'}';
+          '$folders COLLECTION${folders == 1 ? '' : 'S'} • $photos DESIGN${photos == 1 ? '' : 'S'}';
     }
     return ClipRRect(
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(4),
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 320),
           padding: const EdgeInsets.fromLTRB(28, 26, 28, 26),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.66),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-                color: Colors.white.withValues(alpha: 0.55), width: 1.2),
+            // Sappan: a wine-velvet card with a gold edge.
+            color: const Color(0xF23F0614),
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: const Color(0xFFC6A15B), width: 0.8),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFFB23A48).withValues(alpha: 0.1),
@@ -432,9 +432,9 @@ class _GlassPanel extends StatelessWidget {
                       height: 110,
                       child: CircularProgressIndicator(
                         value: pct,
-                        strokeWidth: 5,
-                        backgroundColor: const Color(0x33B23A48),
-                        color: scheme.primary,
+                        strokeWidth: 1.6,
+                        backgroundColor: const Color(0x33C6A15B),
+                        color: const Color(0xFFC6A15B),
                       ),
                     ),
                     // BB logo lives in the middle of the loading circle.
@@ -454,10 +454,10 @@ class _GlassPanel extends StatelessWidget {
                 UText(
                   '${((pct ?? 0) * 100).round()}%',
                   style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                    color: scheme.onSurface,
-                    letterSpacing: 0.5,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: const Color(0xFFE9D9B4),
+                    letterSpacing: 2.0,
                   ),
                 ),
               ],
@@ -465,7 +465,7 @@ class _GlassPanel extends StatelessWidget {
               const Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'LOADING SAPPAN SAREES'),
+                    TextSpan(text: 'SAPPAN'),
                     WidgetSpan(
                       alignment: PlaceholderAlignment.top,
                       child: Padding(
@@ -475,7 +475,7 @@ class _GlassPanel extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF3A1F26),
+                            color: Color(0xFFC6A15B),
                             height: 1.0,
                           ),
                         ),
@@ -484,18 +484,19 @@ class _GlassPanel extends StatelessWidget {
                   ],
                 ),
                 style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  color: Color(0xFF3A1F26),
-                  letterSpacing: 1.2,
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                  color: Color(0xFFFFFCF7),
+                  letterSpacing: 8,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 2),
               const UText(
-                'LATEST DESIGNS',
+                'THE FINEST WEAVES OF INDIA',
                 style: TextStyle(
-                  color: Color(0xFFB23A48),
+                  color: Color(0xFFC6A15B),
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
                   letterSpacing: 2.0,
@@ -505,7 +506,7 @@ class _GlassPanel extends StatelessWidget {
               UText(
                 subtitle,
                 style: const TextStyle(
-                  color: Color(0xFF6A4B53),
+                  color: Color(0xFFE9D9B4),
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.6,
@@ -517,18 +518,17 @@ class _GlassPanel extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                      color: const Color(0xFFB23A48).withValues(alpha: 0.18)),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(color: const Color(0x66C6A15B)),
                 ),
                 child: const UText(
-                  'FIRST-TIME SETUP • ONLY ONCE',
+                  'WELCOME TO THE HOUSE',
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 1.0,
-                    color: Color(0xFFB23A48),
+                    letterSpacing: 2.4,
+                    color: Color(0xFFC6A15B),
                   ),
                 ),
               ),

@@ -26,7 +26,7 @@ import '../services/transport_info.dart';
 import '../theme.dart';
 import 'tutorial_screen.dart';
 
-const _green = Color(0xFF1B8E3A);
+const _green = Color(0xFF5E0B1F);
 const _dark = Color(0xFF1B1A18);
 const _red = Color(0xFFD32F2F);
 
@@ -2003,7 +2003,7 @@ class _SignupFormState extends State<_SignupForm> {
                   Padding(
                     padding: const EdgeInsets.only(top: 6, left: 4),
                     child: Text('✓ GST no. of this transport: $tGst',
-                        style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1B5E20))),
+                        style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF3F0614))),
                   ),
                 _usualTransports(),
               ],
@@ -2147,7 +2147,7 @@ class _TransportBox extends StatelessWidget {
                     title: Text(list[i]),
                     subtitle: g != null
                         ? Text('GST $g',
-                            style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF1B5E20)))
+                            style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF3F0614)))
                         : null,
                     onTap: () => onSelected(list[i]),
                   );

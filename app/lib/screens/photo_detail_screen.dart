@@ -190,9 +190,9 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF16060A),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF16060A),
         foregroundColor: Colors.white,
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -309,7 +309,7 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
              Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Material(
-              color: isFav ? const Color(0xFF0F5C25) : const Color(0xFF1B8E3A),
+              color: isFav ? const Color(0xFF3F0614) : const Color(0xFF5E0B1F),
               borderRadius: BorderRadius.circular(12),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
@@ -321,7 +321,7 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
                   width: double.infinity,
                   child: Center(
                     child: Text(
-                        isFav ? '✓ SELECTED — CLICK TO CHANGE' : 'CLICK TO SELECT COLOURS / SETS',
+                        isFav ? '✓ IN YOUR BAG — CHANGE COLOUR' : 'CHOOSE YOUR COLOUR',
                         style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
@@ -358,7 +358,7 @@ class _DetailFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: const Color(0xFF16060A),
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 18),
       child: SafeArea(
         top: false,

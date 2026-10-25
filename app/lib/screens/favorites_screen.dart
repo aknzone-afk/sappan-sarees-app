@@ -81,7 +81,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: UText(t('Empty cart?', 'कार्ट खाली करें?')),
+        title: UText(t('Empty your bag?', 'बैग खाली करें?')),
         content: UText(
             t('This removes every design from your cart. You cannot undo this.', 'कार्ट के सारे डिज़ाइन हट जाएँगे।')),
         actions: [
@@ -187,26 +187,23 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      // Owner 11-Oct: no "CART · N DESIGN" title — two boxed buttons across.
+      // Sappan: a boutique header — SHOPPING BAG, with orders / empty as icons.
       appBar: AppBar(
-        titleSpacing: 0,
-        title: Row(children: [
-          Expanded(
-              child: BarButton(
-                  icon: Icons.receipt_long_outlined,
-                  label: 'PAST ORDERS',
-                  onTap: () => context.push('/orders'))),
-          if (favPhotos.isNotEmpty) ...[
-            const SizedBox(width: 8),
-            Expanded(
-                child: BarButton(
-                    icon: Icons.delete_sweep_outlined,
-                    label: 'CLEAR SELECTION',
-                    color: const Color(0xFFC62828),
-                    onTap: _confirmClear)),
-          ],
-        ]),
-        actions: const [SizedBox(width: 12)],
+        centerTitle: true,
+        title: Text('SHOPPING BAG${favPhotos.isEmpty ? '' : ' · ${favPhotos.length}'}',
+            style: const TextStyle(fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 2.4)),
+        actions: [
+          IconButton(
+              tooltip: 'My orders',
+              icon: const Icon(Icons.receipt_long_outlined),
+              onPressed: () => context.push('/orders')),
+          if (favPhotos.isNotEmpty)
+            IconButton(
+                tooltip: 'Empty bag',
+                icon: const Icon(Icons.delete_outline_rounded),
+                onPressed: _confirmClear),
+          const SizedBox(width: 4),
+        ],
       ),
       body: favPhotos.isEmpty
           ? Center(
@@ -218,7 +215,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                     Icon(Icons.shopping_cart_outlined,
                         size: 56, color: scheme.outline),
                     const SizedBox(height: 12),
-                    UText(t('Your cart is empty.', 'कार्ट खाली है।'),
+                    UText(t('Your shopping bag is empty.', 'आपका बैग खाली है।'),
                         style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 4),
                     UText(
@@ -297,7 +294,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                                   : () => _orderNow(favPhotos),
                               icon: const Icon(Icons.shopping_bag_rounded),
                               label: UText(
-                                t('Order now  ·  ${favPhotos.length}', 'ऑर्डर करें  ·  ${favPhotos.length}'),
+                                t('Checkout  ·  ${favPhotos.length}', 'चेकआउट  ·  ${favPhotos.length}'),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 0.6),

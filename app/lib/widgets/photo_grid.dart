@@ -52,15 +52,15 @@ class PhotoGrid extends ConsumerWidget {
         cacheExtent: 2400,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-          childAspectRatio: 0.66,
+          mainAxisSpacing: 14,
+          crossAxisSpacing: 10,
+          childAspectRatio: 0.56, // Sappan: photo + price card
         ),
         itemCount: photos.length,
         itemBuilder: (context, i) {
           final p = photos[i];
           return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.zero, // couture: square edges
             child: PhotoCard(
               photo: p,
               removeMode: removeMode,

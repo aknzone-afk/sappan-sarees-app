@@ -190,6 +190,21 @@ ThemeData buildAppTheme() {
     ),
     dividerTheme: const DividerThemeData(color: kHairline, thickness: 0.8),
     listTileTheme: const ListTileThemeData(iconColor: kMaroon),
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: kPaper,
+      surfaceTintColor: kPaper,
+      elevation: 0,
+      height: 64,
+      indicatorColor: Colors.transparent,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      iconTheme: WidgetStateProperty.resolveWith((s) => IconThemeData(
+          color: s.contains(WidgetState.selected) ? kMaroon : const Color(0xFF8A7B70), size: 23)),
+      labelTextStyle: WidgetStateProperty.resolveWith((s) => TextStyle(
+          fontSize: 9.5,
+          letterSpacing: 1.8,
+          fontWeight: s.contains(WidgetState.selected) ? FontWeight.w800 : FontWeight.w600,
+          color: s.contains(WidgetState.selected) ? kMaroon : const Color(0xFF8A7B70))),
+    ),
     iconTheme: const IconThemeData(color: kMaroon),
   );
 }

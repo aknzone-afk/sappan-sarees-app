@@ -141,8 +141,8 @@ class _SearchCartButton extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
     return IconButton(
       tooltip: count == 0
-          ? 'Cart (empty)'
-          : 'Cart · $count design${count == 1 ? '' : 's'}',
+          ? 'Bag (empty)'
+          : 'Bag · $count design${count == 1 ? '' : 's'}',
       onPressed: () => context.push('/favorites'),
       icon: Badge(
         isLabelVisible: count > 0,

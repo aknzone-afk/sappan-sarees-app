@@ -573,9 +573,9 @@ class _PickScreenState extends ConsumerState<PickScreen> {
         await _done(leaving: true); // leaving with changes = keep them (empty = not in cart)
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF16060A),
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: const Color(0xFF16060A),
           foregroundColor: Colors.white,
           // Owner: no design number up here — two boxed buttons with icons,
           // spread across with space between (11-Oct).
@@ -586,7 +586,7 @@ class _PickScreenState extends ConsumerState<PickScreen> {
             if (_setOnly)
               Container(
                 width: double.infinity,
-                color: const Color(0xFF1B8E3A),
+                color: const Color(0xFF5E0B1F),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 child: const Text('SET TO SET ONLY — designs below ₹310 are sold in full sets',
                     textAlign: TextAlign.center,
@@ -594,7 +594,7 @@ class _PickScreenState extends ConsumerState<PickScreen> {
               ),
             Container(
                 width: double.infinity,
-                color: const Color(0xFF111111),
+                color: const Color(0xFF2A0B12),
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
                 child: Text(
                   _s.isEmpty
@@ -729,7 +729,7 @@ class _PickScreenState extends ConsumerState<PickScreen> {
                                           decoration: BoxDecoration(
                                             color: m.n < 0
                                                 ? const Color(0xFFD32F2F)
-                                                : const Color(0xFF1B8E3A),
+                                                : const Color(0xFF5E0B1F),
                                             shape: BoxShape.circle,
                                             border: Border.all(
                                                 color: Colors.white, width: 2),
@@ -804,7 +804,7 @@ class _PickScreenState extends ConsumerState<PickScreen> {
                 ),
                 FilledButton(
                   style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFF1B8E3A)),
+                      backgroundColor: const Color(0xFF5E0B1F)),
                   onPressed: _done,
                   child: Text(t('DONE', 'हो गया')),
                 ),

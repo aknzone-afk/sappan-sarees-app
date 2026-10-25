@@ -91,7 +91,7 @@ class SelectionBottomBar extends ConsumerWidget {
                 },
                 icon: const Icon(Icons.shopping_cart_rounded),
                 label: const UText(
-                  'SEND TO CART',
+                  'ADD TO BAG',
                   style: TextStyle(
                       fontWeight: FontWeight.w700, letterSpacing: 0.5),
                 ),

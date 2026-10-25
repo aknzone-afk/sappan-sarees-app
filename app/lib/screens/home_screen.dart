@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:catalog_app/widgets/caps_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -7,17 +9,21 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../config.dart';
 import '../models/folder.dart';
+import '../models/photo.dart';
 import '../providers/providers.dart';
-import 'tutorial_screen.dart';
+import '../services/drive_urls.dart';
+import '../services/order_service.dart';
+import '../services/photo_freshness.dart';
+import '../theme.dart';
 import 'retail_signup_screen.dart' show HeritageWeaves;
 import 'daily_feed_screen.dart';
-import '../widgets/bar_button.dart';
-import '../widgets/filter_sheet.dart';
 import '../widgets/loading_collage.dart';
-import '../widgets/photo_stack.dart';
-import 'access_control.dart';
-import 'share_bar.dart';
 
+/// SAPPAN SAREES home — a fashion-house storefront (owner 25-Oct-2026: "like
+/// Gucci / Armani, nobody may tell it is the B.B Synthetics app"): centred
+/// tracked wordmark, full-bleed editorial hero, New In rail, full-bleed
+/// collection tiles, the weaves of India, the house promises, and a bottom
+/// navigation bar (Home · New In · Search · Bag · Orders).
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -30,117 +36,52 @@ class HomeScreen extends ConsumerWidget {
       });
     });
     final catalogAsync = ref.watch(catalogProvider);
-    final filter = ref.watch(filterProvider);
 
     // First-install loading: fullscreen collage with no app bar / nav bar.
     if (catalogAsync.value == null && !catalogAsync.hasError) {
       return const Scaffold(body: LoadingCollage());
     }
-    // Owner 14-Oct: up to 5 s more on the collage while the first screen of
-    // every folder downloads — no spinning circles inside folders.
     if (catalogAsync.hasValue && ref.watch(firstScreensWarmProvider).isLoading) {
       return const Scaffold(body: LoadingCollage());
     }
 
     return Scaffold(
-      // Owner 12-Oct: only the B.B SYNTHETICS logo (no "Surat saree manufacturer"
-      // text) + four boxed buttons with icon AND word.
       appBar: AppBar(
-        toolbarHeight: 72,
-        leadingWidth: 64,
-        // Owner 15-Oct: TUTORIAL sits on the left (where the logo was).
-        leading: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 2, 8),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            onTap: () {
-              if (Tutorial.videoId(ref.read(sharedPreferencesProvider)) == null) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('How-to-order video coming soon.')));
-                return;
-              }
-              context.push('/tutorial');
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Theme.of(context).colorScheme.outline),
-              ),
-              child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.play_circle_outline_rounded, size: 22),
-                Text('HOW TO', style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
-              ]),
-            ),
-          ),
+        toolbarHeight: 68,
+        centerTitle: true,
+        leading: IconButton(
+          tooltip: 'The House',
+          icon: const Icon(Icons.menu_rounded),
+          onPressed: () => _showShopInfo(context),
         ),
-        titleSpacing: 4,
-        title: Row(children: [
-          Expanded(
-            // Owner 15-Oct: DAILY UPDATE (day-wise history, like WhatsApp).
-            child: BarButton(
-              stacked: true,
-              icon: Icons.fiber_new_rounded,
-              label: 'DAILY',
-              sub: 'UPDATE',
-              count: ref.watch(dailyTodayCountProvider),
-              onTap: () {
-                ref.invalidate(dailyFeedProvider); // always the latest days
-                context.push('/daily');
-              },
-            ),
+        title: GestureDetector(
+          onTap: () => _showShopInfo(context),
+          child: const _Wordmark(),
+        ),
+        actions: [
+          IconButton(
+            tooltip: 'Search',
+            icon: const Icon(Icons.search_rounded),
+            onPressed: () => context.push('/search'),
           ),
-          const SizedBox(width: 6),
-          Expanded(
-              child: BarButton(
-                  stacked: true,
-                  icon: Icons.search_rounded,
-                  label: 'SEARCH',
-                  onTap: () => context.push('/search'))),
-          const SizedBox(width: 6),
-          Expanded(
-              child: BarButton(
-                  stacked: true,
-                  icon: Icons.swap_vert_rounded,
-                  label: 'SORT',
-                  dot: filter.isActive,
-                  onTap: () => FilterSheet.show(context))),
-          const SizedBox(width: 6),
-          Expanded(
-              child: BarButton(
-                  stacked: true,
-                  icon: Icons.shopping_cart_outlined,
-                  label: 'MY CART',
-                  count: ref.watch(favoritesProvider).length,
-                  onTap: () => context.push('/favorites'))),
-        ]),
-        actions: const [SizedBox(width: 12)],
+          const _BagIcon(),
+          const SizedBox(width: 4),
+        ],
       ),
       body: RefreshIndicator(
-        // Invisible spinner — the refresh happens silently in the background;
-        // the user shouldn't see a loading indicator on pull-to-refresh.
-        color: Colors.transparent,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        strokeWidth: 0,
+        color: kMaroon,
         onRefresh: () async {
-          // Tester 13-Oct: one guarded walk shared with the background
-          // re-scan (no second concurrent Drive walk); the version checks
-          // start at once and their price reads wait for the walk.
-          // 13-Oct crash reports: `ref` dies if the screen rebuilds during
-          // the await — the app-wide container does not.
+          // The app-wide container survives a rebuild during the await.
           final c = ProviderScope.containerOf(context, listen: false);
           await c.read(pullToRefreshProvider)();
           await c.read(catalogProvider.future);
         },
         child: _buildBody(ref, catalogAsync),
       ),
-      bottomNavigationBar: const SelectionBottomBar(),
+      bottomNavigationBar: const SappanNavBar(current: 0),
     );
   }
 
-  /// Show the big first-time loading screen *only* when there's no prior data
-  /// to display. Subsequent refreshes (silent or pull-to-refresh) keep the
-  /// previously-cached photos on screen.
   Widget _buildBody(WidgetRef ref, AsyncValue<dynamic> async) {
     final value = async.value;
     if (value == null) {
@@ -150,117 +91,442 @@ class HomeScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(catalogProvider),
         );
       }
-      // Loading and no prior value: this is the very first run on this device.
       return const LoadingCollage();
     }
-    // We have data — show it even if a refresh is in flight.
     final data = value as dynamic;
     if (data.photos.isEmpty) return const _EmptyCatalogView();
-    return _FoldersView(updatedAt: data.updatedAt);
+    return const _Storefront();
   }
 }
 
-class _FoldersView extends ConsumerWidget {
-  final DateTime updatedAt;
-  const _FoldersView({required this.updatedAt});
-
-  String _formatAge(DateTime t) {
-    final age = DateTime.now().difference(t);
-    if (age.inMinutes < 1) return 'updated just now';
-    if (age.inMinutes < 60) return 'updated ${age.inMinutes} min ago';
-    if (age.inHours < 24) return 'updated ${age.inHours} h ago';
-    return 'updated ${age.inDays} d ago';
+/// Centred, widely tracked serif wordmark.
+class _Wordmark extends StatelessWidget {
+  const _Wordmark();
+  @override
+  Widget build(BuildContext context) {
+    return const Column(mainAxisSize: MainAxisSize.min, children: [
+      Text('SAPPAN',
+          style: TextStyle(
+              fontFamily: 'Playfair',
+              fontSize: 25,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 9,
+              height: 1.0,
+              color: kMaroon)),
+      SizedBox(height: 4),
+      Text('S A R E E S',
+          style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, letterSpacing: 4.5, color: kGold, height: 1.0)),
+    ]);
   }
+}
+
+class _BagIcon extends ConsumerWidget {
+  const _BagIcon();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final n = ref.watch(favoritesProvider).length;
+    return IconButton(
+      tooltip: 'Shopping Bag',
+      onPressed: () => context.push('/favorites'),
+      icon: Badge(
+        isLabelVisible: n > 0,
+        label: Text('$n'),
+        child: const Icon(Icons.shopping_bag_outlined),
+      ),
+    );
+  }
+}
+
+/// Bottom navigation shared by the storefront screens.
+class SappanNavBar extends ConsumerWidget {
+  final int current;
+  const SappanNavBar({super.key, required this.current});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final folders = ref.watch(topLevelFoldersProvider);
-    final photos = ref.watch(photosProvider);
-
-    return CustomScrollView(
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(3, 0, 3, 96),
-          sliver: SliverGrid.builder(
-            itemCount: folders.length,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 220,
-              mainAxisSpacing: 3,
-              crossAxisSpacing: 3,
-              childAspectRatio: 0.82,
-            ),
-            itemBuilder: (context, i) => _FolderTile(folder: folders[i]),
-          ),
-        ),
+    final bag = ref.watch(favoritesProvider).length;
+    final today = ref.watch(dailyTodayCountProvider);
+    Widget badge(int n, IconData icon) =>
+        Badge(isLabelVisible: n > 0, label: Text('$n'), child: Icon(icon));
+    return NavigationBar(
+      selectedIndex: current,
+      onDestinationSelected: (i) {
+        if (i == current) return;
+        switch (i) {
+          case 0:
+            context.go('/');
+          case 1:
+            ref.invalidate(dailyFeedProvider);
+            context.push('/daily');
+          case 2:
+            context.push('/search');
+          case 3:
+            context.push('/favorites');
+          case 4:
+            context.push('/orders');
+        }
+      },
+      destinations: [
+        const NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home_rounded), label: 'HOME'),
+        NavigationDestination(icon: badge(today, Icons.auto_awesome_outlined), label: 'NEW IN'),
+        const NavigationDestination(icon: Icon(Icons.search_rounded), label: 'SEARCH'),
+        NavigationDestination(icon: badge(bag, Icons.shopping_bag_outlined), label: 'BAG'),
+        const NavigationDestination(icon: Icon(Icons.receipt_long_outlined), label: 'ORDERS'),
       ],
     );
   }
 }
 
-class _FolderTile extends ConsumerWidget {
-  final CatalogFolder folder;
-  const _FolderTile({required this.folder});
+class _Storefront extends ConsumerWidget {
+  const _Storefront();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: () => context.push(
-          '/folder/${Uri.encodeComponent(folder.path.isEmpty ? "_root" : folder.path)}'),
-      child: Card(
-        // Default Card margin (4px all round) doubled the visual gap between
-        // tiles — the grid's own spacing is the single source of gap now.
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: folder.coverThumbPath == null
-                  ? Container(
-                      color: scheme.surfaceContainerLow,
-                      child: const Icon(Icons.folder, size: 36))
-                  : Padding(
-                      // Breathing room so the tilted photos behind the cover
-                      // peek out and the tile clearly reads as a folder/stack.
-                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-                      child: PhotoStack(folder: folder),
-                    ),
+    final folders = ref.watch(topLevelFoldersProvider);
+    final photos = [...ref.watch(photosProvider)]..sort(Photo.compareNewestFirst);
+    final hero = photos.take(6).toList();
+    final newIn = photos.take(14).toList();
+    final w = MediaQuery.sizeOf(context).width;
+
+    return CustomScrollView(
+      slivers: [
+        if (hero.isNotEmpty) SliverToBoxAdapter(child: _Hero(photos: hero, height: w * 1.12)),
+        const SliverToBoxAdapter(child: _SectionHead(eyebrow: 'JUST ARRIVED', title: 'New In', route: '/daily')),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 262,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              itemCount: newIn.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (_, i) => _ProductTile(photo: newIn[i], ids: [for (final p in newIn) p.id]),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  UText(
-                    folder.path.isEmpty ? 'Uncategorized' : folder.displayName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontFamily: 'Playfair',
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        height: 1.15,
-                        fontFeatures: [FontFeature.liningFigures()]),
-                  ),
-                  const SizedBox(height: 3),
-                  UText(
-                    '${folder.photoCount} designs',
-                    style: TextStyle(
-                      fontSize: 9.5,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2.0,
-                      color: scheme.secondary,
-                    ),
-                  ),
-                ],
+          ),
+        ),
+        const SliverToBoxAdapter(child: _SectionHead(eyebrow: 'THE HOUSE EDIT', title: 'Collections')),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
+          sliver: SliverGrid.builder(
+            itemCount: folders.length,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 240,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.70,
+            ),
+            itemBuilder: (context, i) => CollectionTile(folder: folders[i]),
+          ),
+        ),
+        const SliverToBoxAdapter(child: _WeavesBand()),
+        const SliverToBoxAdapter(child: _Promises()),
+        const SliverToBoxAdapter(child: _Footer()),
+      ],
+    );
+  }
+}
+
+/// Full-bleed editorial hero: the newest designs, gently cross-fading.
+class _Hero extends StatefulWidget {
+  final List<Photo> photos;
+  final double height;
+  const _Hero({required this.photos, required this.height});
+  @override
+  State<_Hero> createState() => _HeroState();
+}
+
+class _HeroState extends State<_Hero> {
+  final _page = PageController();
+  Timer? _timer;
+  int _i = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!mounted || !_page.hasClients || widget.photos.length < 2) return;
+      _i = (_i + 1) % widget.photos.length;
+      _page.animateToPage(_i, duration: const Duration(milliseconds: 900), curve: Curves.easeInOutCubic);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _page.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: widget.height,
+      child: Stack(fit: StackFit.expand, children: [
+        PageView.builder(
+          controller: _page,
+          itemCount: widget.photos.length,
+          onPageChanged: (i) => setState(() => _i = i),
+          itemBuilder: (_, i) => CachedNetworkImage(
+            imageUrl: widget.photos[i].thumbUrl(),
+            cacheManager: photoCacheManager,
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter, // the saree, not its label
+            placeholder: (_, __) => Container(color: kLinen),
+            errorWidget: (_, __, ___) => Container(color: kLinen),
+          ),
+        ),
+        const IgnorePointer(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.30, 0.62, 0.80],
+                colors: [Color(0x00000000), Color(0xCC2A0710), Color(0xFF2A0710)],
               ),
             ),
-          ],
+          ),
         ),
+        Positioned(
+          left: 24,
+          right: 24,
+          bottom: 28,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('THE NEW SEASON',
+                style: TextStyle(color: kGoldSoft, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 4)),
+            const SizedBox(height: 8),
+            const Text('The Finest Weaves\nof India',
+                style: TextStyle(
+                    fontFamily: 'Playfair', color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700, height: 1.12)),
+            const SizedBox(height: 16),
+            Row(children: [
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.white, width: 1),
+                  shape: const RoundedRectangleBorder(),
+                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+                ),
+                onPressed: () => context.push('/daily'),
+                child: const Text('DISCOVER', style: TextStyle(letterSpacing: 3.5, fontWeight: FontWeight.w700)),
+              ),
+              const Spacer(),
+              for (var k = 0; k < widget.photos.length; k++)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.only(left: 6),
+                  width: k == _i ? 18 : 6,
+                  height: 2,
+                  color: k == _i ? kGold : Colors.white54,
+                ),
+            ]),
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+class _SectionHead extends StatelessWidget {
+  final String eyebrow;
+  final String title;
+  final String? route;
+  const _SectionHead({required this.eyebrow, required this.title, this.route});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 34, 18, 16),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(eyebrow, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, letterSpacing: 3.6, color: kGold)),
+            const SizedBox(height: 6),
+            Text(title,
+                style: const TextStyle(fontFamily: 'Playfair', fontSize: 27, fontWeight: FontWeight.w700, color: kMaroon, height: 1.05)),
+          ]),
+        ),
+        if (route != null)
+          TextButton(
+            onPressed: () => context.push(route!),
+            child: const Text('VIEW ALL', style: TextStyle(letterSpacing: 2.4, fontSize: 11.5)),
+          ),
+      ]),
+    );
+  }
+}
+
+/// New-In product: portrait photo, design and price set like a price card.
+class _ProductTile extends StatelessWidget {
+  final Photo photo;
+  final List<String> ids;
+  const _ProductTile({required this.photo, required this.ids});
+  @override
+  Widget build(BuildContext context) {
+    final price = photo.price;
+    return SizedBox(
+      width: 158,
+      child: InkWell(
+        onTap: () => context.push('/photo/${Uri.encodeComponent(photo.id)}', extra: ids),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(
+            height: 198,
+            width: 158,
+            child: CachedNetworkImage(
+              imageUrl: photo.thumbUrl(),
+              cacheManager: photoCacheManager,
+              memCacheWidth: gridDecodeWidth(context),
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Container(color: kLinen),
+              errorWidget: (_, __, ___) => Container(color: kLinen),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text((photo.designNumber ?? photo.topFolder).toUpperCase(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 10.5, letterSpacing: 2.2, fontWeight: FontWeight.w600, color: kInk)),
+          const SizedBox(height: 4),
+          if (price != null)
+            Text(OrderService.formatRupees(price),
+                style: const TextStyle(fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, color: kMaroon)),
+        ]),
       ),
+    );
+  }
+}
+
+/// A collection: full-bleed cover, name in white serif over a wine veil.
+class CollectionTile extends StatelessWidget {
+  final CatalogFolder folder;
+  const CollectionTile({super.key, required this.folder});
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => context.push('/folder/${Uri.encodeComponent(folder.path.isEmpty ? "_root" : folder.path)}'),
+      child: Stack(fit: StackFit.expand, children: [
+        if (folder.coverThumbPath != null)
+          CachedNetworkImage(
+            imageUrl: DriveUrls.thumbnail(folder.coverThumbPath!, width: kThumbnailWidth),
+            cacheManager: photoCacheManager,
+            memCacheWidth: gridDecodeWidth(context),
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter, // the saree, not its label
+            placeholder: (_, __) => Container(color: kLinen),
+            errorWidget: (_, __, ___) => Container(color: kLinen),
+          )
+        else
+          Container(color: kLinen),
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.42, 0.66, 0.80],
+              colors: [Color(0x00000000), Color(0xD92A0710), Color(0xFF2A0710)],
+            ),
+          ),
+        ),
+        Positioned(
+          left: 12,
+          right: 12,
+          bottom: 14,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              folder.path.isEmpty ? 'The Collection' : _titleCase(folder.displayName),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  fontFamily: 'Playfair', color: Colors.white, fontSize: 17.5, fontWeight: FontWeight.w700, height: 1.15),
+            ),
+            const SizedBox(height: 6),
+            Row(children: [
+              Container(width: 18, height: 1, color: kGold),
+              const SizedBox(width: 8),
+              Text('${folder.photoCount} DESIGNS',
+                  style: const TextStyle(color: kGoldSoft, fontSize: 9.5, letterSpacing: 2.4, fontWeight: FontWeight.w600)),
+            ]),
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+String _titleCase(String s) => s
+    .toLowerCase()
+    .split(' ')
+    .map((w) => w.isEmpty ? w : (RegExp(r'^rs$').hasMatch(w) ? 'Rs' : w[0].toUpperCase() + w.substring(1)))
+    .join(' ');
+
+class _WeavesBand extends StatelessWidget {
+  const _WeavesBand();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.fromLTRB(18, 34, 18, 34),
+      color: kLinen,
+      child: const Column(children: [
+        Text('A JOURNEY ACROSS INDIA',
+            style: TextStyle(fontSize: 10.5, letterSpacing: 3.6, fontWeight: FontWeight.w700, color: kGold)),
+        SizedBox(height: 8),
+        Text('The Weaves We Love',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: 'Playfair', fontSize: 27, fontWeight: FontWeight.w700, color: kMaroon)),
+        SizedBox(height: 10),
+        Text(
+          'From the brocades of Varanasi to the airy checks of Kota, every region of India '
+          'has its own poetry in thread. Our collections are inspired by them all.',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 14, height: 1.6, color: kInk),
+        ),
+        SizedBox(height: 20),
+        HeritageWeaves(),
+      ]),
+    );
+  }
+}
+
+class _Promises extends StatelessWidget {
+  const _Promises();
+  @override
+  Widget build(BuildContext context) {
+    Widget item(IconData i, String t, String s) => Expanded(
+          child: Column(children: [
+            Icon(i, color: kMaroon, size: 26),
+            const SizedBox(height: 10),
+            Text(t,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 10.5, letterSpacing: 2, fontWeight: FontWeight.w700, color: kInk)),
+            const SizedBox(height: 4),
+            Text(s, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, height: 1.4, color: Color(0xFF6B5E57))),
+          ]),
+        );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 34, 14, 10),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        item(Icons.local_shipping_outlined, 'ACROSS INDIA', 'Delivered to your door'),
+        item(Icons.diamond_outlined, 'FROM ONE SAREE', 'No minimum order'),
+        item(Icons.chat_outlined, 'PERSONAL SERVICE', 'We call you on WhatsApp'),
+      ]),
+    );
+  }
+}
+
+class _Footer extends StatelessWidget {
+  const _Footer();
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 30, 18, 40),
+      child: Column(children: [
+        Container(height: 0.8, color: kHairline),
+        const SizedBox(height: 26),
+        const _Wordmark(),
+        const SizedBox(height: 10),
+        const Text('© 2026 SAPPAN SAREES · INDIA',
+            style: TextStyle(fontSize: 9.5, letterSpacing: 2.4, color: Color(0xFF8A7B70))),
+      ]),
     );
   }
 }
@@ -276,227 +542,63 @@ class _ErrorView extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         const SizedBox(height: 80),
-        Icon(Icons.cloud_off_rounded,
-            size: 56, color: Theme.of(context).colorScheme.outline),
+        Icon(Icons.cloud_off_rounded, size: 56, color: Theme.of(context).colorScheme.outline),
         const SizedBox(height: 16),
-        UText(message,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge),
+        Text('We could not reach the collection. Please check your internet.',
+            textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 16),
-        Center(
-          child: FilledButton.tonalIcon(
-            onPressed: onRetry,
-            icon: const Icon(Icons.refresh),
-            label: const UText('Retry'),
-          ),
-        ),
+        Center(child: OutlinedButton(onPressed: onRetry, child: const Text('TRY AGAIN'))),
       ],
     );
   }
 }
 
-class _HomeCartButton extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(favoritesProvider).length;
-    return _cartIconWithBadge(context, count);
-  }
-}
-
-/// Cart icon with a prominent count badge. Shared across home, folder, and
-/// search screens so customers always know how many designs are in their
-/// cart and can jump to it from anywhere.
-Widget _cartIconWithBadge(BuildContext context, int count) {
-  return IconButton(
-    tooltip: count == 0
-        ? 'Cart (empty)'
-        : 'Cart · $count design${count == 1 ? '' : 's'}',
-    onPressed: () => context.push('/favorites'),
-    icon: Badge(
-      isLabelVisible: count > 0,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      textColor: Theme.of(context).colorScheme.onPrimary,
-      textStyle: const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0,
-        height: 1.0,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-      offset: const Offset(2, -4),
-      label: UText('$count'),
-      child: const Icon(Icons.shopping_cart_rounded, size: 24),
-    ),
-  );
-}
-
-/// Shop contact + address card surfaced when the customer taps the brand
-/// title on the home AppBar. Phone number and map link are tap-through.
+/// "The House" card (menu / wordmark tap): the brand story + contact.
 void _showShopInfo(BuildContext context) {
   const phone = '7016638059';
-
-  // Tester 13-Oct: launch directly (like advance_screen) instead of gating on
-  // canLaunchUrl, which is false on Android 11+ when the browser/dialer isn't
-  // declared in <queries> — the tap silently did nothing.
   Future<void> openUrl(String url) async {
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } catch (_) {/* no app can open it — nothing to do */}
+    } catch (_) {/* no app can open it */}
   }
 
   showDialog<void>(
     context: context,
-    builder: (_) {
-      final scheme = Theme.of(context).colorScheme;
-      return AlertDialog(
-        title: const UText('Sappan Sarees',
-            style: TextStyle(fontWeight: FontWeight.w800)),
-        contentPadding: const EdgeInsets.fromLTRB(24, 14, 24, 8),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Luxury sarees inspired by the great weaving traditions of India — '
-              'delivered to your door, anywhere in the country.',
-              style: TextStyle(fontSize: 14, height: 1.5),
-            ),
-            const SizedBox(height: 14),
-            const HeritageWeaves(),
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: () => openUrl('tel:$phone'),
-              child: Row(
-                children: [
-                  Icon(Icons.call_rounded, color: scheme.primary, size: 22),
-                  const SizedBox(width: 10),
-                  UText(
-                    phone,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: scheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          // Account controls only exist once the OTP login gate is active.
-          // "Delete Account" is an App Store requirement for apps with login.
-          if (kAccessControlEnabled) ...[
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                await deleteMyAccount(context);
-              },
-              child: const UText('Delete Account',
-                  style: TextStyle(color: Color(0xFFB3261E))),
-            ),
-          ],
+    builder: (_) => AlertDialog(
+      title: const Center(child: _Wordmark()),
+      contentPadding: const EdgeInsets.fromLTRB(22, 16, 22, 8),
+      content: SingleChildScrollView(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text(
+            'A house of luxury sarees, inspired by the great weaving traditions of India — '
+            'delivered to your door, anywhere in the country.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, height: 1.55),
+          ),
+          const SizedBox(height: 16),
+          const HeritageWeaves(),
+          const SizedBox(height: 18),
+          OutlinedButton.icon(
+            onPressed: () => openUrl('https://wa.me/91$phone'),
+            icon: const Icon(Icons.chat_outlined, size: 18),
+            label: const Text('CONCIERGE ON WHATSAPP'),
+          ),
+          TextButton.icon(
+            onPressed: () => openUrl('tel:$phone'),
+            icon: const Icon(Icons.call_outlined, size: 18),
+            label: const Text('CALL US'),
+          ),
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const UText('Close')),
-        ],
-      );
-    },
-  );
-}
-
-class _BrandTitle extends ConsumerWidget {
-  const _BrandTitle();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // BB script monogram (transparent PNG). Box constrains so it never
-        // gets clipped by the AppBar bounds.
-        SizedBox(
-          width: 44,
-          height: 44,
-          child: Padding(
-            padding: const EdgeInsets.all(2),
-            child: Image.asset(
-              'assets/icon/bb_logo.png',
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.medium,
-            ),
+            onPressed: () => openUrl(kPrivacyUrl),
+            child: const Text('PRIVACY POLICY', style: TextStyle(fontSize: 11, letterSpacing: 1.6)),
           ),
-        ),
-        const SizedBox(width: 8),
-        GestureDetector(
-          onTap: () => _showShopInfo(context),
-          behavior: HitTestBehavior.opaque,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'SAPPAN SAREES',
-                      style: TextStyle(
-                        fontFamily: 'Playfair',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18,
-                        letterSpacing: 2.4,
-                        color: scheme.primary, // Sappan wine wordmark
-                        height: 1.0,
-                      ),
-                    ),
-                    WidgetSpan(
-                      alignment: PlaceholderAlignment.top,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 2),
-                        child: UText(
-                          '©',
-                          style: TextStyle(
-                            fontSize: 9,
-                            color: scheme.onSurface.withValues(alpha: 0.65),
-                            height: 1.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              UText(
-                kBrandSubtitle,
-                style: TextStyle(
-                  fontSize: 8.5,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.8,
-                  color: scheme.onSurface.withValues(alpha: 0.50),
-                  height: 1.0,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Container(
-                height: 1.2,
-                width: 48,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      scheme.secondary,
-                      scheme.secondary.withValues(alpha: 0),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        ]),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const UText('Close')),
       ],
-    );
-  }
+    ),
+  );
 }
 
 class _EmptyCatalogView extends StatelessWidget {
@@ -505,20 +607,12 @@ class _EmptyCatalogView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(32),
-      children: [
-        const SizedBox(height: 80),
-        Icon(Icons.photo_library_outlined,
-            size: 56, color: Theme.of(context).colorScheme.outline),
-        const SizedBox(height: 16),
-        UText('Catalog is empty.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 6),
-        UText(
-          'No photos found in the shared Drive folder yet.',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+      children: const [
+        SizedBox(height: 120),
+        Center(child: _Wordmark()),
+        SizedBox(height: 20),
+        Text('Our new collection is arriving shortly.',
+            textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Playfair', fontSize: 18, color: kMaroon)),
       ],
     );
   }

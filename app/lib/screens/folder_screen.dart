@@ -11,6 +11,8 @@ import '../models/filter_state.dart' as fs;
 import '../models/folder.dart';
 import '../models/photo.dart';
 import '../providers/providers.dart';
+import 'home_screen.dart' show CollectionTile;
+import '../theme.dart';
 import '../services/drive_urls.dart';
 import '../services/photo_freshness.dart';
 import '../services/price_check.dart';
@@ -122,17 +124,18 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
               SliverPadding(
                 // Same grid metrics as the home screen so folders look identical
                 // at every level.
-                padding: const EdgeInsets.fromLTRB(3, 0, 3, 8),
+                padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
                 sliver: SliverGrid.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 220,
-                    mainAxisSpacing: 3,
-                    crossAxisSpacing: 3,
-                    childAspectRatio: 0.82,
+                    maxCrossAxisExtent: 240,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.70,
                   ),
                   itemCount: contents.subFolders.length,
+                  // Sappan: the same full-bleed collection tile as the home.
                   itemBuilder: (context, i) =>
-                      _SubfolderTile(folder: contents.subFolders[i]),
+                      CollectionTile(folder: contents.subFolders[i]),
                 ),
               ),
             ],
@@ -144,7 +147,7 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
                     maxCrossAxisExtent: 200,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
-                    childAspectRatio: 0.66,
+                    childAspectRatio: 0.56, // Sappan: photo + price card
                   ),
                   itemCount: filteredDirect.length,
                   itemBuilder: (context, i) => _GridTile(
@@ -287,29 +290,34 @@ class _FolderScaffold extends ConsumerWidget {
               ),
             ]);
           }
-          final cart = ref.watch(favoritesProvider).length;
-          final filterOn = ref.watch(filterProvider).isActive;
-          return Row(children: [
-            Expanded(
-                child: BarButton(
-                    icon: Icons.search_rounded, label: 'SEARCH', onTap: () => context.push('/search'))),
-            const SizedBox(width: 8),
-            Expanded(
-                child: BarButton(
-                    icon: Icons.swap_vert_rounded,
-                    label: 'SORT',
-                    dot: filterOn,
-                    onTap: () => FilterSheet.show(context))),
-            const SizedBox(width: 8),
-            Expanded(
-                child: BarButton(
-                    icon: Icons.shopping_cart_outlined,
-                    label: 'MY CART',
-                    count: cart,
-                    onTap: () => context.push('/favorites'))),
-          ]);
+          // Sappan: the collection's name, set like a fashion-house header.
+          return Text(retailText(title).toUpperCase(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 2.2, color: kMaroon));
         }),
-        actions: const [SizedBox(width: 12)],
+        centerTitle: true,
+        actions: [
+          IconButton(
+              tooltip: 'Search', icon: const Icon(Icons.search_rounded), onPressed: () => context.push('/search')),
+          Consumer(builder: (context, ref, _) {
+            final on = ref.watch(filterProvider).isActive;
+            return IconButton(
+                tooltip: 'Sort & filter',
+                icon: Badge(isLabelVisible: on, smallSize: 7, child: const Icon(Icons.tune_rounded)),
+                onPressed: () => FilterSheet.show(context));
+          }),
+          Consumer(builder: (context, ref, _) {
+            final n = ref.watch(favoritesProvider).length;
+            return IconButton(
+                tooltip: 'Shopping Bag',
+                icon: Badge(isLabelVisible: n > 0, label: Text('$n'), child: const Icon(Icons.shopping_bag_outlined)),
+                onPressed: () => context.push('/favorites'));
+          }),
+          const SizedBox(width: 4),
+        ],
       ),
       body: RefreshIndicator(
         color: Colors.transparent,
@@ -338,8 +346,8 @@ class _CartButton extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
     return IconButton(
       tooltip: count == 0
-          ? 'Cart (empty)'
-          : 'Cart · $count design${count == 1 ? '' : 's'}',
+          ? 'Bag (empty)'
+          : 'Bag · $count design${count == 1 ? '' : 's'}',
       onPressed: () => context.push('/favorites'),
       icon: Badge(
         isLabelVisible: count > 0,

@@ -148,7 +148,7 @@ class _ItemTile extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: const Color(0xFFE8F5E9), borderRadius: BorderRadius.circular(6)),
                     child: Text(item.pick!.toUpperCase(),
-                        style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1B5E20))),
+                        style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF3F0614))),
                   ),
                 const SizedBox(height: 6),
                 Text('${item.qty} PCS', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),

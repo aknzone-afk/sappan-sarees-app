@@ -14,6 +14,8 @@ import '../services/picks_service.dart';
 import '../services/pieces_service.dart';
 import 'pick_preview.dart';
 import '../services/price_check.dart';
+import '../services/order_service.dart';
+import '../theme.dart';
 
 class PhotoCard extends ConsumerWidget {
   final Photo photo;
@@ -110,7 +112,7 @@ class PhotoCard extends ConsumerWidget {
               right: 0,
               bottom: 0,
               child: Container(
-                color: const Color(0xEE111111),
+                color: const Color(0xE65E0B1F),
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                 child: Text(
                   pickSummary,
@@ -121,63 +123,6 @@ class PhotoCard extends ConsumerWidget {
                       fontWeight: FontWeight.w800,
                       fontSize: 11.5,
                       height: 1.25),
-                ),
-              ),
-            ),
-          if (pickSummary == null &&
-              (price == PriceDisplay.show || photo.designNumber != null))
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Color(0xCC000000), Color(0x00000000)],
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(8, 16, 8, 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Owner 12-Oct: no "₹ ···" while checking — the rate
-                    // simply appears once confirmed.
-                    if (price == PriceDisplay.show) ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: UText(
-                          priceLabel(photo, price),
-                          style: const TextStyle(
-                            color: Color(0xFF111111),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                    ],
-                    if (photo.designNumber != null)
-                      Flexible(
-                        child: UText(
-                          photo.designNumber!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.end,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                  ],
                 ),
               ),
             ),
@@ -205,7 +150,7 @@ class PhotoCard extends ConsumerWidget {
               top: 6,
               right: 6,
               child: Material(
-                color: const Color(0xE61B1A18),
+                color: const Color(0xE65E0B1F),
                 shape: const CircleBorder(),
                 child: InkWell(
                   customBorder: const CircleBorder(),
@@ -227,74 +172,55 @@ class PhotoCard extends ConsumerWidget {
         ),
         // Owner 12-Oct: in the CART no SELECTED strip (everything there is
         // selected) — only a ✕ on the photo corner. Elsewhere: white line + box.
-        if (!removeMode) ...[
-        // Owner 12-Oct: a thin white line between the photo and the box.
-        Container(height: 2, color: Colors.white),
-        SizedBox(
-          height: 40,
-          child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch, // fills the strip — no white gap
-                children: [
-                  Expanded(
-                    child: Material(
-                      // Owner 12-Oct: green (the cart-badge green); darker once selected.
-                      color: pickLabel != null
-                          ? const Color(0xFF0F5C25)
-                          : const Color(0xFF1B8E3A),
-                      child: InkWell(
-                        onTap: () {
-                          precacheImage(
-                              CachedNetworkImageProvider(photo.detailUrl(),
-                                  cacheManager: photoCacheManager),
-                              context);
-                          context.push('/pick/${Uri.encodeComponent(photo.id)}');
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 8),
-                          child: Text(
-                            pickLabel != null
-                                ? '✓ SELECTED'
-                                : (isFav ? t('✓ IN CART · SELECT', '✓ कार्ट में · सिलेक्ट') : t('SELECT COLOURS / SETS', 'सिलेक्ट करें')),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 12,
-                              letterSpacing: 0.6,
-                            ),
-                          ),
+        if (!removeMode)
+          Container(
+            color: kPaper,
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+              Row(children: [
+                Expanded(
+                  child: Text((photo.designNumber ?? '').toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 10, letterSpacing: 1.8, fontWeight: FontWeight.w600, color: kInk)),
+                ),
+                if (price == PriceDisplay.show && photo.price != null)
+                  Text(OrderService.formatRupees(photo.price!),
+                      style: const TextStyle(
+                          fontFamily: 'Playfair', fontSize: 15, fontWeight: FontWeight.w700, color: kMaroon)),
+              ]),
+              const SizedBox(height: 7),
+              Material(
+                color: pickLabel != null ? kMaroon : kPaper,
+                shape: const RoundedRectangleBorder(side: BorderSide(color: kGold, width: 0.8)),
+                child: InkWell(
+                  onTap: () {
+                    precacheImage(
+                        CachedNetworkImageProvider(photo.detailUrl(), cacheManager: photoCacheManager), context);
+                    context.push('/pick/${Uri.encodeComponent(photo.id)}');
+                  },
+                  child: SizedBox(
+                    height: 30,
+                    child: Center(
+                      child: Text(
+                        pickLabel != null
+                            ? '✓ IN YOUR BAG'
+                            : (isFav ? t('IN BAG · CHOOSE COLOUR', 'बैग में · रंग चुनें') : t('CHOOSE COLOUR', 'रंग चुनें')),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: pickLabel != null ? kGoldSoft : kMaroon,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10.5,
+                          letterSpacing: 1.8,
                         ),
                       ),
                     ),
                   ),
-                  if (removeMode) ...[
-                    const SizedBox(width: 6),
-                    Material(
-                      color: const Color(0xE61B1A18),
-                      shape: const CircleBorder(),
-                      child: InkWell(
-                        customBorder: const CircleBorder(),
-                        onTap: () async {
-                          await ref.read(picksProvider.notifier).remove(photo.id);
-                          await ref
-                              .read(favoritesProvider.notifier)
-                              .toggle(photo.id);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(7),
-                          child: Icon(Icons.close_rounded,
-                              size: 20, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
+                ),
               ),
-        ),
-        ],
+            ]),
+          ),
       ]),
     );
   }

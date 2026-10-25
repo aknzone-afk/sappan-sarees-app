@@ -246,7 +246,7 @@ class _DayBubble extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Align(
                   alignment: Alignment.centerRight,
-                  child: Text('OPEN  ›', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF1B5E20))),
+                  child: Text('OPEN  ›', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF3F0614))),
                 ),
               ]),
             ),

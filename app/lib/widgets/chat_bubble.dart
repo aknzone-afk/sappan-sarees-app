@@ -163,7 +163,7 @@ class _ChatBubbleState extends ConsumerState<ChatBubble> with WidgetsBindingObse
           label: Text('$_unread'),
           child: FloatingActionButton(
             heroTag: 'chat-bubble',
-            backgroundColor: const Color(0xFF1B8E3A),
+            backgroundColor: const Color(0xFF5E0B1F),
             foregroundColor: Colors.white,
             onPressed: _open,
             child: const HelplineIcon(size: 34), // lady with headset = helpline

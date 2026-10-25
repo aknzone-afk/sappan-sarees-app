@@ -154,7 +154,7 @@ class _AdvanceScreenState extends ConsumerState<AdvanceScreen> {
     final o = _order;
     if (o == null) return Scaffold(appBar: AppBar(), body: const Center(child: Text('Order not found.')));
     final due = _due(o);
-    const green = Color(0xFF1B8E3A);
+    const green = Color(0xFF5E0B1F);
     // Phone BACK button: go to the catalogue (not out of the app).
     return PopScope(
       canPop: false,
@@ -223,7 +223,7 @@ class _AdvanceScreenState extends ConsumerState<AdvanceScreen> {
                   const SizedBox(height: 6),
                   Text('Amount ${OrderService.formatRupees(due)} — filled in when you scan',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF1B8E3A))),
+                      style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF5E0B1F))),
                 ]),
               ),
             ),

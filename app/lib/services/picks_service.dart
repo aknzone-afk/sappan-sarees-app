@@ -200,7 +200,7 @@ Future<Uint8List> renderPicks(Uint8List bytes, PickState pick,
         continue;
       }
       c.drawCircle(o, r * 1.08, Paint()..color = Colors.white);
-      c.drawCircle(o, r, Paint()..color = const Color(0xFF1B8E3A));
+      c.drawCircle(o, r, Paint()..color = const Color(0xFF5E0B1F));
       final tp = TextPainter(
         text: TextSpan(
             text: '${m.n}',

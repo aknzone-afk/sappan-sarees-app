@@ -215,7 +215,7 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
             height: 54,
             child: FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF1B8E3A),
+                backgroundColor: const Color(0xFF5E0B1F),
                 disabledBackgroundColor: Colors.white12,
               ),
               onPressed: canGo ? _continue : null,

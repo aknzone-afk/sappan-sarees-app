@@ -205,7 +205,7 @@ class _MarkupScreenState extends ConsumerState<MarkupScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: UText(wasAlreadyInCart ? 'Saved' : 'Saved into your cart'),
+          content: UText(wasAlreadyInCart ? 'Saved' : 'Saved into your bag'),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
@@ -338,7 +338,7 @@ class _MarkupScreenState extends ConsumerState<MarkupScreen> {
                   label: UText(
                     _saving
                         ? 'Saving…'
-                        : (alreadyInCart ? 'SAVE' : 'SEND TO CART'),
+                        : (alreadyInCart ? 'SAVE' : 'ADD TO BAG'),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.8,
