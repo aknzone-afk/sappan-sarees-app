@@ -1,0 +1,124 @@
+import 'services/order_service.dart';
+import 'dart:ui' show PlatformDispatcher;
+import 'services/error_report.dart';
+import 'services/push_service.dart';
+import 'package:flutter/material.dart';
+
+import 'l10n.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'app.dart';
+import 'config.dart';
+import 'providers/providers.dart';
+import 'services/background_refresh.dart';
+import 'services/notification_service.dart';
+import 'screens/daily_feed_screen.dart' show dailyFeedProvider;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Owner 12-Oct: the app must never close because of an app error — every
+  // error is caught, logged to the shop's cloud, and the app keeps running.
+  FlutterError.onError = (d) {
+    FlutterError.presentError(d);
+    reportAppError(d.exceptionAsString(), d.stack);
+  };
+  PlatformDispatcher.instance.onError = (e, st) {
+    reportAppError('$e', st);
+    return true; // handled — don't crash
+  };
+
+  // Lock app to portrait orientation. Nothing before runApp may stop the
+  // catalog from showing (tester 13-Oct: a throw here = splash forever).
+  try {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  } catch (_) {}
+  final prefs = await SharedPreferences.getInstance();
+  try {
+    await OrderService.wipeTestDataOnce(prefs); // test orders gone (owner 12-Oct)
+    await OrderService.seedTrialOnce(prefs); // store release: trial / LIVE TEST off
+    loadLanguage(prefs);
+  } catch (e, st) {
+    reportAppError('startup: $e', st);
+  }
+
+  assert(
+    kDriveFolderId.isNotEmpty && !kDriveFolderId.contains('REPLACE'),
+    'You must set kDriveFolderId in lib/config.dart before running the app.',
+  );
+
+  // Register the every-2-hour background refresh (10:00-20:30 window).
+  // No notifications, no foreground service — uses WorkManager only.
+  try {
+    await BackgroundRefresh.register();
+  } catch (_) {
+    // Background refresh registration failures are non-fatal; foreground
+    // pull-to-refresh still works.
+  }
+
+  // Daily 9 PM "new designs" reminder → opens the DAILY UPDATE folder on tap.
+  // Non-fatal: the catalog still works if notifications are denied/unavailable.
+  String? launchPayload;
+  try {
+    await NotificationService.instance.init(onTap: _openDailyUpdate);
+    // The notification permission is asked when it is needed — after the
+    // first order (PushService.register) — never over the catalog at launch
+    // (tester 13-Oct: the OS prompt blocked the first screen).
+    // Owner 11-Oct: no daily / weekly "new designs" notification any more —
+    // cancel the one older versions scheduled.
+    await NotificationService.instance.cancelDaily();
+    launchPayload = await NotificationService.instance.launchPayload();
+  } catch (_) {}
+
+  // A root container we can reach from the notification handler so tapping the
+  // daily reminder can force a fresh Drive scrape.
+  final container = ProviderContainer(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
+    ],
+  );
+  _rootContainer = container;
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const CatalogApp(),
+    ),
+  );
+
+  // Real push (owner 11-Oct): the bill / a shop reply rings the phone; a tap
+  // opens the chat. Non-fatal if Firebase is unavailable.
+  // Sappan v1: no push (B.B Synthetics' Firebase ids are not ours).
+  // ignore: dead_code
+  if (false) PushService.init((route) => WidgetsBinding.instance.addPostFrameCallback((_) =>
+      // Owner 14-Oct: the 9 PM push opens the DAILY UPDATE folder.
+      route == 'daily' ? _openDailyUpdate(kDailyUpdateFolder) : openChat()));
+
+  // Cold-launched by tapping the notification → open the folder after frame 1.
+  if (launchPayload != null && launchPayload.isNotEmpty) {
+    final p = launchPayload;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openDailyUpdate(p));
+  }
+}
+
+/// Root provider container, so the notification handler can force a refresh.
+ProviderContainer? _rootContainer;
+
+/// Opens the daily-update folder from a notification tap AND pulls the latest
+/// from Drive on the spot, so the folder reflects exactly what's there now.
+void _openDailyUpdate(String payload) {
+  if (payload == 'chat') {
+    openChat(); // bill / shop message notification
+    return;
+  }
+  // Owner 15-Oct: the 9 PM push opens the DAILY UPDATE history (day bubbles).
+  // Today's photos may sit in any folder -> fresh feed + a full catalogue sync.
+  appRouter.push('/daily');
+  final c = _rootContainer;
+  if (c == null) return;
+  c.invalidate(dailyFeedProvider);
+  c.invalidate(catalogProvider);
+}
