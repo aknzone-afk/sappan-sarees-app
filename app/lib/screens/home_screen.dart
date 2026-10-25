@@ -16,7 +16,6 @@ import '../services/order_service.dart';
 import '../services/photo_freshness.dart';
 import '../theme.dart';
 import 'retail_signup_screen.dart' show HeritageWeaves;
-import 'daily_feed_screen.dart';
 import '../widgets/loading_collage.dart';
 
 /// SAPPAN SAREES home — a fashion-house storefront (owner 25-Oct-2026: "like
@@ -145,7 +144,6 @@ class SappanNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bag = ref.watch(favoritesProvider).length;
-    final today = ref.watch(dailyTodayCountProvider);
     Widget badge(int n, IconData icon) =>
         Badge(isLabelVisible: n > 0, label: Text('$n'), child: Icon(icon));
     return NavigationBar(
@@ -156,8 +154,7 @@ class SappanNavBar extends ConsumerWidget {
           case 0:
             context.go('/');
           case 1:
-            ref.invalidate(dailyFeedProvider);
-            context.push('/daily');
+            context.push('/new');
           case 2:
             context.push('/search');
           case 3:
@@ -168,7 +165,7 @@ class SappanNavBar extends ConsumerWidget {
       },
       destinations: [
         const NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home_rounded), label: 'HOME'),
-        NavigationDestination(icon: badge(today, Icons.auto_awesome_outlined), label: 'NEW IN'),
+        const NavigationDestination(icon: Icon(Icons.auto_awesome_outlined), label: 'NEW IN'),
         const NavigationDestination(icon: Icon(Icons.search_rounded), label: 'SEARCH'),
         NavigationDestination(icon: badge(bag, Icons.shopping_bag_outlined), label: 'BAG'),
         const NavigationDestination(icon: Icon(Icons.receipt_long_outlined), label: 'ORDERS'),
@@ -191,7 +188,7 @@ class _Storefront extends ConsumerWidget {
     return CustomScrollView(
       slivers: [
         if (hero.isNotEmpty) SliverToBoxAdapter(child: _Hero(photos: hero, height: w * 1.12)),
-        const SliverToBoxAdapter(child: _SectionHead(eyebrow: 'JUST ARRIVED', title: 'New In', route: '/daily')),
+        const SliverToBoxAdapter(child: _SectionHead(eyebrow: 'JUST ARRIVED', title: 'New In', route: '/new')),
         SliverToBoxAdapter(
           child: SizedBox(
             height: 262,
@@ -307,7 +304,7 @@ class _HeroState extends State<_Hero> {
                   shape: const RoundedRectangleBorder(),
                   padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
                 ),
-                onPressed: () => context.push('/daily'),
+                onPressed: () => context.push('/new'),
                 child: const Text('DISCOVER', style: TextStyle(letterSpacing: 3.5, fontWeight: FontWeight.w700)),
               ),
               const Spacer(),

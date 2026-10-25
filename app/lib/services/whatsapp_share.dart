@@ -256,7 +256,7 @@ class WhatsAppShare {
       final fontSize = (w * 0.026).clamp(9.0, 26.0);
       final tp = TextPainter(
         text: TextSpan(
-          text: 'AKN',
+          text: 'SAPPAN',
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.20), // very subtle
             fontSize: fontSize,

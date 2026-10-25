@@ -69,7 +69,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                 const SizedBox(height: 6),
                 Text(c.billName, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
                 if (c.address.isNotEmpty) Text(c.address),
-                if (c.bookingPlace.isNotEmpty) Text('Booking place: ${c.bookingPlace}'),
+                if (c.bookingPlace.isNotEmpty) Text('City: ${c.bookingPlace}'),
                 if (c.transport.isNotEmpty) Text('Transport: ${c.transport}'),
                 if (c.mobile.isNotEmpty) Text('Mobile: ${c.mobile}'),
                 if (o.note.isNotEmpty) ...[

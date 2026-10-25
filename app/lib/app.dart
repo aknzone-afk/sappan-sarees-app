@@ -17,6 +17,7 @@ import 'screens/chat_screen.dart';
 import 'screens/order_detail_screen.dart';
 import 'screens/advance_screen.dart';
 import 'screens/daily_feed_screen.dart';
+import 'screens/new_in_screen.dart';
 import 'widgets/keyboard_hide.dart';
 import 'screens/whats_new_screen.dart';
 import 'services/order_service.dart';
@@ -77,7 +78,9 @@ final appRouter = GoRouter(
     ),
     GoRoute(path: '/orders', builder: (_, __) => const MyOrdersScreen()),
     // Owner 15-Oct: DAILY UPDATE history (one bubble per day).
-    GoRoute(path: '/daily', builder: (_, __) => const DailyFeedScreen()),
+    // Sappan: plain newest-first gallery; the day-by-day feed is not used.
+    GoRoute(path: '/new', builder: (_, __) => const NewInScreen()),
+    GoRoute(path: '/daily', redirect: (_, __) => '/new'),
     GoRoute(
       path: '/daily/:date',
       builder: (_, s) => DailyDayScreen(date: s.pathParameters['date']!),

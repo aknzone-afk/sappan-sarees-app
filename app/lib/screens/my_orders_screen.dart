@@ -155,7 +155,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
       context: context,
       builder: (c) => AlertDialog(
         title: const Text('Delete your account?'),
-        content: const Text('Your Sappan Sarees account, your details and your ID / shop photos will be deleted. '
+        content: const Text('Your Sappan Sarees account and your details (name, mobile, address) will be deleted. '
             'Orders already placed stay with us for billing. You can sign up again any time.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
@@ -323,25 +323,19 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                             // Owner 14-Oct: no token any more — the chat opens
                             // as soon as the order is placed (questions, bill,
                             // payment all in the chat).
-                            if (!o.awaitingAdvance)
+                            // Sappan: questions go to our WhatsApp concierge.
                             InkWell(
-                              borderRadius: BorderRadius.circular(10),
-                              onTap: openChat,
+                              onTap: () => launchUrl(
+                                  Uri.parse('https://wa.me/$kCustomerCareNumber?text=${Uri.encodeComponent('Hello Sappan Sarees, about my ORDER NO. ${o.serial ?? o.number}')}'),
+                                  mode: LaunchMode.externalApplication),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                 decoration: BoxDecoration(
-                                    color: const Color(0xFF5E0B1F), borderRadius: BorderRadius.circular(10)),
-                                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                  const HelplineIcon(size: 18),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                      const ['bill_sent', 'payment_received', 'dispatched', 'bilty']
-                                              .contains(_st[o.number]?.status)
-                                          ? 'SEND PAYMENT\nDETAILS'
-                                          : 'CHAT\nWITH US',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 10, height: 1.15)),
-                                ]),
+                                    color: const Color(0xFF5E0B1F),
+                                    border: Border.all(color: const Color(0xFFC6A15B), width: 0.8)),
+                                child: const Text('WHATSAPP\nUS',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Color(0xFFE9D9B4), fontWeight: FontWeight.w800, fontSize: 10, letterSpacing: 1.2, height: 1.15)),
                               ),
                             ),
                           ])
@@ -392,7 +386,8 @@ class _Steps extends StatelessWidget {
   }
 
   static const _keys = ['received', 'getting_ready', 'bill_sent', 'payment_received', 'dispatched', 'bilty'];
-  static const _names = ['Sent to shop', 'Getting order ready', 'Bill sent for payment', 'Payment received', 'Dispatched', 'Bilty'];
+  // Sappan retail wording.
+  static const _names = ['Order received', 'Being prepared', 'Payment requested', 'Payment received', 'Dispatched', 'Tracking details sent'];
 
   @override
   Widget build(BuildContext context) {

@@ -69,17 +69,17 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Save the payment QR to your photos, to scan it from the gallery in your UPI app.</string>
+	<string>Save saree photos you like to your gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Choose your payment screenshot to send to the shop.</string>
+	<string>Choose a photo to share with Sappan Sarees (for example a saree you are looking for).</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>To record a short business-proof video with your voice when you sign up.</string>
+	<string>Used only if you choose to record a video message for Sappan Sarees.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Used only once, when you sign up, to verify your shop's location for the shop. Never in the background. You can say no and still continue.</string>
+	<string>Used only if you choose to share your delivery location. Never in the background. You can say no and still continue.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used once when you sign up, to verify your shop's location for the shop. You can say no and still continue.</string>
+	<string>Used only if you choose to share your delivery location. You can say no and still continue.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Take a photo of your payment, or of your PAN / Aadhaar card to verify your account, to send to the shop.</string>
+	<string>Take a photo to share with Sappan Sarees (for example a saree you are looking for).</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

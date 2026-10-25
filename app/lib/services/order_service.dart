@@ -863,7 +863,7 @@ class OrderService {
       {void Function(String step)? onStep}) async {
     try {
       if (!await _enabled(prefs, dio)) {
-        order.lastError = 'Waiting for connection to the shop';
+        order.lastError = 'Will be sent automatically when connected';
         await _saveOrder(prefs, order);
         return false;
       }

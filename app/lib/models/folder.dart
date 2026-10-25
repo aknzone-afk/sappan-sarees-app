@@ -27,7 +27,10 @@ class CatalogFolder {
     if (path.isEmpty) return 'Catalog';
     final i = path.lastIndexOf('/');
     // Sappan: wholesale price bands in folder names shown at retail.
-    return retailText(i == -1 ? path : path.substring(i + 1));
+    final name = i == -1 ? path : path.substring(i + 1);
+    // Sappan: the shop's DAILY UPDATE folder reads as New Arrivals.
+    if (name.trim().toUpperCase() == 'DAILY UPDATE') return 'NEW ARRIVALS';
+    return retailText(name);
   }
 
   int get depth => path.isEmpty ? 0 : path.split('/').length;

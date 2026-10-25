@@ -165,7 +165,7 @@ class _DailyFeedScreenState extends ConsumerState<DailyFeedScreen> {
   Widget build(BuildContext context) {
     final feed = ref.watch(dailyFeedProvider);
     return Scaffold(
-      appBar: AppBar(title: const UText('DAILY UPDATE')),
+      appBar: AppBar(centerTitle: true, title: const UText('NEW IN')),
       body: feed.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, __) => Center(
@@ -206,22 +206,22 @@ class _DayBubble extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             margin: const EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(color: scheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(12)),
-            child: Text(_label(day.date), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+            child: Text(_label(day.date).toUpperCase(),
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 10.5, letterSpacing: 2.6, color: Color(0xFFC6A15B))),
           ),
         ),
         Material(
-          color: const Color(0xFFE8F5E9),
-          borderRadius: BorderRadius.circular(14),
+          // Sappan: an ivory card with a gold edge (no chat bubble).
+          color: const Color(0xFFFFFCF7),
+          shape: const RoundedRectangleBorder(side: BorderSide(color: Color(0xFFC6A15B), width: 0.8)),
           child: InkWell(
-            borderRadius: BorderRadius.circular(14),
             onTap: () => context.push('/daily/${day.date}'),
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 // the number that opens — never more than what is inside
-                Text('🆕 ${photos.length} new design${photos.length == 1 ? '' : 's'}',
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                Text('${photos.length} new design${photos.length == 1 ? '' : 's'}',
+                    style: const TextStyle(fontFamily: 'Playfair', fontWeight: FontWeight.w700, fontSize: 19, color: Color(0xFF5E0B1F))),
                 const SizedBox(height: 8),
                 Row(children: [
                   for (final p in photos.take(4))
@@ -231,7 +231,7 @@ class _DayBubble extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.zero,
                             child: CachedNetworkImage(
                               imageUrl: DriveUrls.thumbnail(p.id, width: kThumbnailWidth),
                               cacheManager: photoCacheManager,
@@ -246,7 +246,7 @@ class _DayBubble extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Align(
                   alignment: Alignment.centerRight,
-                  child: Text('OPEN  ›', style: TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF3F0614))),
+                  child: Text('DISCOVER  ›', style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 2.4, fontSize: 12, color: Color(0xFF5E0B1F))),
                 ),
               ]),
             ),
