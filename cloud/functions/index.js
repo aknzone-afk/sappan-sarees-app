@@ -124,7 +124,7 @@ async function orderGroup() {
   let best = null;
   snap.forEach((d) => {
     const t = String((d.data() || {}).title || "");
-    if (/sap+an/i.test(t) && (!best || (d.data().at || 0) > best.at)) best = { chat: d.id, title: t, at: d.data().at || 0 };
+    if (/sap+an|सपन|सप्पन|सापन/i.test(t) && (!best || (d.data().at || 0) > best.at)) best = { chat: d.id, title: t, at: d.data().at || 0 };
   });
   if (!best) return null;
   await db().collection("sappan_settings").doc("telegram").set({ chat: best.chat, title: best.title, at: Date.now(), auto: true });

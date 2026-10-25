@@ -296,7 +296,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                                   : () => _orderNow(favPhotos),
                               icon: const Icon(Icons.shopping_bag_rounded),
                               label: UText(
-                                t('Checkout  ·  ${favPhotos.length}', 'चेकआउट  ·  ${favPhotos.length}'),
+                                t('PLACE ORDER  ·  ${favPhotos.length}', 'ऑर्डर करें  ·  ${favPhotos.length}'),
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 0.6),
@@ -304,24 +304,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        SizedBox(
-                          height: 52,
-                          child: OutlinedButton.icon(
-                            onPressed:
-                                _sending ? null : () => _sendAll(favPhotos),
-                            icon: _sending
-                                ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2))
-                                : const Icon(Icons.share_rounded),
-                            label: UText(_sending ? '…' : t('Share', 'शेयर'),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700)),
-                          ),
-                        ),
+                        // Sappan: no Share — the bag only places the order.
                       ],
                     ),
                   ],

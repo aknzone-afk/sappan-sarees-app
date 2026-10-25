@@ -685,7 +685,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                 'आपका ऑर्डर लग जाएगा। सब सही हो तभी YES दबाएँ।')),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('NO')),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('YES, CONFIRM ORDER')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('YES, PLACE ORDER')),
         ],
       ),
     );
@@ -795,7 +795,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           title: Text(t('Order not placed yet', 'ऑर्डर अभी नहीं हुआ')),
           content: Text(t(
               '${miss.designs.length} photo(s) could not be downloaded: '
-                  '$names$more\n\nPlease check your internet and tap Confirm order again. Your bag is safe.',
+                  '$names$more\n\nPlease check your internet and tap Place order again. Your bag is safe.',
               '${miss.designs.length} फोटो डाउनलोड नहीं हुई: $names$more\n\n'
                   'इंटरनेट जाँचें और फिर से ऑर्डर भेजें दबाएँ। आपका कार्ट सुरक्षित है।')),
           actions: [
@@ -845,7 +845,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
             Text(
               sent
                   ? '${o.items.length} designs · ${o.totalPcs} pcs reached us. '
-                      'Sappan Sarees will contact you on WhatsApp shortly.'
+                      'You will receive your bill here in My Orders.'
                   : 'No connection right now. Your order is safe on this phone '
                       'and will be sent automatically when internet is back. '
                       'See "My Orders".',
@@ -926,7 +926,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: UText(t('Checkout', 'चेकआउट'))),
+          title: UText(t('Your Order', 'आपका ऑर्डर'))),
       body: photos.isEmpty
           ? Center(child: UText(t('Your shopping bag is empty.', 'आपका बैग खाली है।')))
           : Form(
@@ -1089,7 +1089,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                     label: UText(
                       value.below
                           ? t('First complete ${MinOrderBar.minLabel} — select more', 'पहले ${MinOrderBar.minLabel} पूरा करें — और चुनें')
-                          : t('Confirm order · ${photos.length} design${photos.length == 1 ? '' : 's'} · $pcs pcs', 'ऑर्डर भेजें · ${photos.length} डिज़ाइन · $pcs पीस'),
+                          : t('PLACE ORDER · ${photos.length} design${photos.length == 1 ? '' : 's'} · $pcs pcs', 'ऑर्डर भेजें · ${photos.length} डिज़ाइन · $pcs पीस'),
                       style: const TextStyle(
                           fontWeight: FontWeight.w700, letterSpacing: 0.4),
                     ),

@@ -135,7 +135,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
       builder: (c) => AlertDialog(
         title: const Text('Log out?'),
         content: const Text(
-            'You will need to verify your mobile number on WhatsApp again to open the catalog.'),
+            'You will need to sign up again with your details to open the catalogue.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
           FilledButton(onPressed: () => Navigator.pop(c, true), child: const Text('Log out')),
@@ -339,21 +339,6 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                             // Owner 14-Oct: no token any more — the chat opens
                             // as soon as the order is placed (questions, bill,
                             // payment all in the chat).
-                            // Sappan: questions go to our WhatsApp concierge.
-                            InkWell(
-                              onTap: () => launchUrl(
-                                  Uri.parse('https://wa.me/$kCustomerCareNumber?text=${Uri.encodeComponent('Hello Sappan Sarees, about my ORDER NO. ${o.serial ?? o.number}')}'),
-                                  mode: LaunchMode.externalApplication),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                decoration: BoxDecoration(
-                                    color: const Color(0xFF5E0B1F),
-                                    border: Border.all(color: const Color(0xFFC6A15B), width: 0.8)),
-                                child: const Text('WHATSAPP\nUS',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Color(0xFFE9D9B4), fontWeight: FontWeight.w800, fontSize: 10, letterSpacing: 1.2, height: 1.15)),
-                              ),
-                            ),
                           ])
                         // Owner 13-Oct: the trial is never sent — no "send now".
                         : (o.awaitingAdvance || OrderService.isTrial(o.number))

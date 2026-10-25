@@ -122,67 +122,64 @@ class _LoadingCollageState extends ConsumerState<LoadingCollage>
       pct = (progress.foldersDone / totals.folders * 0.40).clamp(0.0, 0.40);
     }
 
-    return LayoutBuilder(builder: (context, constraints) {
-      _canvas = Size(constraints.maxWidth, constraints.maxHeight);
-      return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: (d) => _pushFromPoint(d.localPosition),
-        onPanUpdate: (d) => _pushFromPoint(d.localPosition),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            const _SilkBackground(),
-            // Discovered photo cards (animated collage).
-            ..._buildCards(discovered),
-            // Soft vignette so the centre panel reads cleanly.
-            IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.center,
-                    radius: 0.9,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.0),
-                      Colors.white.withValues(alpha: 0.55),
-                    ],
-                    stops: const [0.4, 1.0],
-                  ),
-                ),
-              ),
-            ),
-            Center(
-              child: _GlassPanel(
-                pct: pct,
-                folders: progress.foldersDone,
-                photos: progress.photosFound,
-                phase: progress.phase,
-                coversReady: progress.coversReady,
-                coversTotal: progress.coversTotal,
-                ocrReady: progress.ocrReady,
-                ocrTotal: progress.ocrTotal,
-              ),
-            ),
-            // Decorative footer hint
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 24,
-              child: Center(
-                child: UText(
-                  'TAP OR DRAG THE SCREEN ✨',
-                  style: TextStyle(
-                    color: const Color(0xFF7A4F5C).withValues(alpha: 0.55),
-                    fontSize: 11,
-                    letterSpacing: 1.4,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ],
+    // Sappan (owner 26-Oct-2026): a couture splash of its own — deep wine
+    // silk, the monogram, a fine gold progress line. No floating photo cards.
+    final phaseText = switch (progress.phase) {
+      ScrapePhase.pricing => 'CURATING THE COLLECTION',
+      ScrapePhase.preparing => 'PREPARING THE LOOKBOOK',
+      _ => 'OPENING THE HOUSE',
+    };
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: RadialGradient(
+          center: Alignment(0, -0.25),
+          radius: 1.15,
+          colors: [Color(0xFF6E1027), Color(0xFF3A0512), Color(0xFF22030B)],
+          stops: [0.0, 0.62, 1.0],
         ),
-      );
-    });
+      ),
+      child: SafeArea(
+        child: Stack(children: [
+          // fine gold frame
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Container(
+                margin: const EdgeInsets.all(18),
+                decoration: BoxDecoration(border: Border.all(color: const Color(0x66C6A15B), width: 0.8)),
+              ),
+            ),
+          ),
+          Center(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              ClipOval(child: Image.asset('assets/icon/sappan_mark.png', width: 132, height: 132)),
+              const SizedBox(height: 30),
+              const Text('SAPPAN',
+                  style: TextStyle(
+                      fontFamily: 'Playfair', fontSize: 34, fontWeight: FontWeight.w700, letterSpacing: 12, color: Color(0xFFFFFCF7))),
+              const SizedBox(height: 8),
+              const Text('THE FINEST WEAVES OF INDIA',
+                  style: TextStyle(fontSize: 11, letterSpacing: 4, fontWeight: FontWeight.w600, color: Color(0xFFC6A15B))),
+              const SizedBox(height: 44),
+              SizedBox(
+                width: 180,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(1),
+                  child: LinearProgressIndicator(
+                    value: pct,
+                    minHeight: 1.6,
+                    color: const Color(0xFFC6A15B),
+                    backgroundColor: const Color(0x33C6A15B),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(pct == null ? phaseText : '$phaseText · ${((pct) * 100).round()}%',
+                  style: const TextStyle(fontSize: 10, letterSpacing: 2.6, color: Color(0xFFE9D9B4))),
+            ]),
+          ),
+        ]),
+      ),
+    );
   }
 
   List<Widget> _buildCards(List<DrivePhoto> discovered) {

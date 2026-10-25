@@ -153,10 +153,7 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(22),
-                      child: Image.asset('assets/icon/ic_launcher.png', width: 96, height: 96),
-                    ),
+                    Center(child: ClipOval(child: Image.asset('assets/icon/sappan_mark.png', width: 104, height: 104))),
                     const SizedBox(height: 14),
                     const UText(
                       'Sappan Sarees',

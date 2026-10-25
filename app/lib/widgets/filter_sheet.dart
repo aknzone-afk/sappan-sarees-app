@@ -135,24 +135,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
               ),
               const SizedBox(height: 12),
 
-              // ---------- Category ----------
-              UText('Category', style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: [
-                  for (final cat in kFabricCategories)
-                    FilterChip(
-                      label: UText(cat.label),
-                      selected: filter.categories.contains(cat.key),
-                      onSelected: (_) => ref
-                          .read(filterProvider.notifier)
-                          .toggleCategory(cat.key),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
+              // Sappan: price range + sort only (no categories).
               // ---------- Price range ----------
               UText('Price range',
                   style: Theme.of(context).textTheme.titleSmall),

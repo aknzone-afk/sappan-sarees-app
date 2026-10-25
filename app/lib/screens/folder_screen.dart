@@ -147,7 +147,7 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
                     maxCrossAxisExtent: 200,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
-                    childAspectRatio: 0.56, // Sappan: photo + price card
+                    childAspectRatio: 0.66, // Sappan: photo + CHOOSE COLOUR
                   ),
                   itemCount: filteredDirect.length,
                   itemBuilder: (context, i) => _GridTile(

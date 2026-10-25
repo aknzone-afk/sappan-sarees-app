@@ -378,11 +378,6 @@ class _ProductTile extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Text((photo.designNumber ?? photo.topFolder).toUpperCase(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 10.5, letterSpacing: 2.2, fontWeight: FontWeight.w600, color: kInk)),
-          const SizedBox(height: 4),
           if (price != null)
             Text(OrderService.formatRupees(price),
                 style: const TextStyle(fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, color: kMaroon)),
@@ -504,7 +499,7 @@ class _Promises extends StatelessWidget {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         item(Icons.local_shipping_outlined, 'ACROSS INDIA', 'Delivered to your door'),
         item(Icons.diamond_outlined, 'FROM ONE SAREE', 'No minimum order'),
-        item(Icons.chat_outlined, 'PERSONAL SERVICE', 'We call you on WhatsApp'),
+        item(Icons.verified_outlined, 'CURATED QUALITY', 'Every order checked by hand'),
       ]),
     );
   }
@@ -552,7 +547,6 @@ class _ErrorView extends StatelessWidget {
 
 /// "The House" card (menu / wordmark tap): the brand story + contact.
 void _showShopInfo(BuildContext context) {
-  const phone = '7016638059';
   Future<void> openUrl(String url) async {
     try {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
@@ -575,16 +569,6 @@ void _showShopInfo(BuildContext context) {
           const SizedBox(height: 16),
           const HeritageWeaves(),
           const SizedBox(height: 18),
-          OutlinedButton.icon(
-            onPressed: () => openUrl('https://wa.me/91$phone'),
-            icon: const Icon(Icons.chat_outlined, size: 18),
-            label: const Text('CONCIERGE ON WHATSAPP'),
-          ),
-          TextButton.icon(
-            onPressed: () => openUrl('tel:$phone'),
-            icon: const Icon(Icons.call_outlined, size: 18),
-            label: const Text('CALL US'),
-          ),
           TextButton(
             onPressed: () => openUrl(kPrivacyUrl),
             child: const Text('PRIVACY POLICY', style: TextStyle(fontSize: 11, letterSpacing: 1.6)),
