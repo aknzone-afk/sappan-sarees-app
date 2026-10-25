@@ -18,3 +18,4 @@ app/android/.gradle/
 
 app/flutter_0*.log
 cloud/functions/node_modules/
+google-services.json
