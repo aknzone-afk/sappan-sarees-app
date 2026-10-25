@@ -259,7 +259,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                       children: [
                         Text(
                           '${OrderService.formatWhen(o.createdAt)}\n'
-                          '${o.customer.billName} · ${o.items.length} designs · ${o.totalPcs} pcs'
+                          '${o.customer.billName} · ${o.items.length} design${o.items.length == 1 ? '' : 's'} · ${o.totalPcs} pcs'
                           '${o.approxTotal != null ? ' · total ${OrderService.formatRupees(o.approxTotal!)}' : ''}',
                         ),
                         const SizedBox(height: 6),

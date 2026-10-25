@@ -844,7 +844,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
             const SizedBox(height: 10),
             Text(
               sent
-                  ? '${o.items.length} designs · ${o.totalPcs} pcs reached us. '
+                  ? '${o.items.length} design${o.items.length == 1 ? '' : 's'} · ${o.totalPcs} pcs reached us. '
                       'You will receive your bill here in My Orders.'
                   : 'No connection right now. Your order is safe on this phone '
                       'and will be sent automatically when internet is back. '
