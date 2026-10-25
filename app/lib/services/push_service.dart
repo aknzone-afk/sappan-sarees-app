@@ -25,7 +25,7 @@ class PushService {
 
   static FirebaseOptions get _options => Platform.isIOS
       ? const FirebaseOptions(
-          apiKey: 'AIzaSyAxhdqiCBOmFltULEA3ZgB-dtuvaoGBePc',
+          apiKey: '' // Sappan: push not set up yet,
           appId: '1:525747821627:ios:3fcec35ed6fb3db395d01e',
           messagingSenderId: '525747821627',
           projectId: 'akn-chat-a7dd8',
@@ -33,7 +33,7 @@ class PushService {
           iosBundleId: 'com.bbsynthetics.catalog',
         )
       : const FirebaseOptions(
-          apiKey: 'AIzaSyAlgcvy486z4PspfQQZRIUOa8yR3YpWTYI',
+          apiKey: '' // Sappan: push not set up yet,
           appId: '1:525747821627:android:b87db67ed7ee231795d01e',
           messagingSenderId: '525747821627',
           projectId: 'akn-chat-a7dd8',
