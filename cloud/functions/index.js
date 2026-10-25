@@ -334,3 +334,10 @@ exports.spSweep = onSchedule({ region: REGION, schedule: "every 5 minutes", secr
     await deliver(d.id);
   }
 });
+
+/** Health check: which Telegram group orders go to (title only). */
+exports.spHealth = endpoint(async () => {
+  const chat = await orderGroup();
+  const s = (await db().collection("sappan_settings").doc("telegram").get()).data();
+  return { ok: true, group: chat ? (s && s.title) || "set" : null };
+}, { secrets: [TG_TOKEN] });
