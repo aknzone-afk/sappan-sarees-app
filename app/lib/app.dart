@@ -98,6 +98,14 @@ final appRouter = GoRouter(
       builder: (_, s) =>
           FolderLinkScreen(name: Uri.decodeComponent(s.pathParameters['name']!)),
     ),
+    // Sappan share links: sappansarees://open/p/<photo id> → that saree.
+    GoRoute(
+      path: '/p/:id',
+      builder: (_, s) {
+        final id = Uri.decodeComponent(s.pathParameters['id']!);
+        return PhotoDetailScreen(initialPhotoId: id, photoIds: [id]);
+      },
+    ),
     GoRoute(path: '/app', redirect: (_, __) => '/'),
     GoRoute(path: '/open', redirect: (_, __) => '/'),
     GoRoute(

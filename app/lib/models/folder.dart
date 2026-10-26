@@ -27,11 +27,17 @@ class CatalogFolder {
     if (path.isEmpty) return 'Catalog';
     final i = path.lastIndexOf('/');
     // Sappan: wholesale price bands in folder names shown at retail.
-    final name = i == -1 ? path : path.substring(i + 1);
-    // Sappan: the shop's DAILY UPDATE folder reads as New Arrivals.
-    if (name.trim().toUpperCase() == 'DAILY UPDATE') return 'NEW ARRIVALS';
-    return retailText(name);
+    return displayFolderName(i == -1 ? path : path.substring(i + 1));
   }
 
   int get depth => path.isEmpty ? 0 : path.split('/').length;
+}
+
+/// Sappan display name of a folder (last segment of [path]): the shop's
+/// DAILY UPDATE folder reads as New Arrivals; rupee bands shown at retail.
+String displayFolderName(String path) {
+  final i = path.lastIndexOf('/');
+  final name = i == -1 ? path : path.substring(i + 1);
+  if (name.trim().toUpperCase() == 'DAILY UPDATE') return 'NEW ARRIVALS';
+  return retailText(name);
 }

@@ -167,4 +167,33 @@ String retailText(String s) => s.replaceAllMapped(
     RegExp(r'((?:RS|Rs|rs|₹)\.?\s*)(\d{2,6})'),
     (m) => '${m[1]}${int.parse(m[2]!) * kRetailMultiplier}');
 
+/// Owner 26-Oct-2026: the crafts of the house, one line each — taken from
+/// what the collection actually is (zari, embroidery, crystals, weaves…).
+const List<({String craft, String line})> kHouseCrafts = [
+  (craft: 'Zari Work', line: 'Gold and silver zari, woven and hand-finished into rich borders and pallus.'),
+  (craft: 'Thread Embroidery', line: 'Designer thread work on every inch — florals, vines and paisleys.'),
+  (craft: 'Swarovski & Stone Work', line: 'Crystal-studded borders that catch the light at every step.'),
+  (craft: 'Sequin & Bead Work', line: 'Sequins, beads and whirl work — made for festive evenings.'),
+  (craft: 'Jharkhan Handwork', line: 'Hand-set jharkhan and stone detailing, piece by piece.'),
+  (craft: 'Mirror Work', line: 'Hand-placed mirrors that bring a festive sparkle.'),
+  (craft: 'Banarasi Weaves', line: 'Jacquard and zari weaving with grand, heavy pallus.'),
+  (craft: 'Organza & Tissue', line: 'Sheer organza and tissue silk with double-tone zari pallus.'),
+  (craft: 'Meena & Rich Pallu', line: 'Meena zari weaving with a rich, statement pallu.'),
+  (craft: 'Kashmiri Embroidery', line: 'Fine Kashmiri needlework on chiffon, viscose and georgette.'),
+  (craft: 'Gotta Patti & Ribbon', line: 'Gleaming gotta and ribbon work, festive and light.'),
+  (craft: 'Bandhej & Leheriya', line: 'Tie-and-dye traditions with a designer finish.'),
+  (craft: 'Rajwadi Work', line: 'Regal, heavily worked sarees for weddings and celebrations.'),
+  (craft: 'Designer Prints', line: 'Digital, Brasso and position prints — a heavy look with a light feel.'),
+];
+
+/// Hero headlines that turn with the photos (home).
+const List<String> kHeroLines = [
+  'The Finest Weaves\nof India',
+  'Zari, Woven\nin Gold',
+  'Thread Work on\nEvery Inch',
+  'Crystal-Studded\nBorders',
+  'Banarasi,\nReimagined',
+  'Organza with a\nZari Pallu',
+];
+
 bool retailVisible(int? wholesale) => wholesale != null && wholesale >= kRetailMinWholesale;

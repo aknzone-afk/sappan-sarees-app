@@ -15,7 +15,7 @@ import '../services/drive_urls.dart';
 import '../services/order_service.dart';
 import '../services/photo_freshness.dart';
 import '../theme.dart';
-import 'retail_signup_screen.dart' show HeritageWeaves;
+import 'retail_signup_screen.dart' show HeritageWeaves, HouseCrafts;
 import '../widgets/loading_collage.dart';
 
 /// SAPPAN SAREES home — a fashion-house storefront (owner 25-Oct-2026: "like
@@ -292,9 +292,13 @@ class _HeroState extends State<_Hero> {
             const Text('THE NEW SEASON',
                 style: TextStyle(color: kGoldSoft, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 4)),
             const SizedBox(height: 8),
-            const Text('The Finest Weaves\nof India',
-                style: TextStyle(
-                    fontFamily: 'Playfair', color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700, height: 1.12)),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 700),
+              child: Text(kHeroLines[_i % kHeroLines.length],
+                  key: ValueKey(_i % kHeroLines.length),
+                  style: const TextStyle(
+                      fontFamily: 'Playfair', color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700, height: 1.12)),
+            ),
             const SizedBox(height: 16),
             Row(children: [
               OutlinedButton(
@@ -456,23 +460,31 @@ class _WeavesBand extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      padding: const EdgeInsets.fromLTRB(18, 34, 18, 34),
+      padding: const EdgeInsets.fromLTRB(18, 34, 18, 30),
       color: kLinen,
       child: const Column(children: [
-        Text('A JOURNEY ACROSS INDIA',
+        Text('THE ATELIER',
             style: TextStyle(fontSize: 10.5, letterSpacing: 3.6, fontWeight: FontWeight.w700, color: kGold)),
         SizedBox(height: 8),
-        Text('The Weaves We Love',
+        Text('Crafted by Hand,\nFinished in Gold',
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Playfair', fontSize: 27, fontWeight: FontWeight.w700, color: kMaroon)),
+            style: TextStyle(fontFamily: 'Playfair', fontSize: 27, fontWeight: FontWeight.w700, color: kMaroon, height: 1.15)),
         SizedBox(height: 10),
         Text(
-          'From the brocades of Varanasi to the airy checks of Kota, every region of India '
-          'has its own poetry in thread. Our collections are inspired by them all.',
+          'Every Sappan saree carries hours of craft — zari woven into the pallu, embroidery on every '
+          'inch, crystals set one by one. These are the arts our collection is made of.',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14, height: 1.6, color: kInk),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 22),
+        HouseCrafts(),
+        SizedBox(height: 22),
+        Text('A JOURNEY ACROSS INDIA',
+            style: TextStyle(fontSize: 10.5, letterSpacing: 3.6, fontWeight: FontWeight.w700, color: kGold)),
+        SizedBox(height: 8),
+        Text('Inspired by the great weaving traditions of every region.',
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 13.5, height: 1.5, color: kInk)),
+        SizedBox(height: 16),
         HeritageWeaves(),
       ]),
     );

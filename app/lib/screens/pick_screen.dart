@@ -63,7 +63,6 @@ class _PickScreenState extends ConsumerState<PickScreen> {
           row('👆', t('Tap the saree colour you want = 1 piece', 'जो रंग चाहिए उस साड़ी पर टैप करें = 1 पीस')),
           row('👆👆', t('Tap again = 2, 3, 4…', 'फिर टैप करें = 2, 3, 4…')),
           row('✋', t('Hold a number = type any quantity', 'नंबर दबाकर रखें = कोई भी संख्या लिखें')),
-          row('➕', t('SET + above the photo = 1 of EVERY colour', 'फ़ोटो के ऊपर SET + = हर रंग का एक पीस')),
           row('✅', t('Press DONE', 'आखिर में "हो गया" दबाएँ')),
         ]),
         actions: [
@@ -511,7 +510,7 @@ class _PickScreenState extends ConsumerState<PickScreen> {
       // Owner 11-Oct: nothing selected (no piece, no SET) = it can't be in the cart.
       if (!leaving) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Select at least 1 piece (tap a saree) or 1 SET to add this design.')));
+            content: Text('Tap the saree colour you want to add this design.')));
         return;
       }
       if (favs.contains(widget.photoId)) {
@@ -622,57 +621,13 @@ class _PickScreenState extends ConsumerState<PickScreen> {
                 }
                 var iw = outer.maxWidth;
                 var ih = iw / a;
-                final room = outer.maxHeight - 56 - 66;
+                final room = outer.maxHeight - 66;
                 if (ih > room) {
                   ih = math.max(80.0, room);
                   iw = ih * a;
                 }
                 return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Container(
-              width: double.infinity,
-              color: const Color(0xFF1B1A18),
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                // SET: − / + so a wrong tap is easy to take back; tap the
-                // number to type any amount.
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white54),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    IconButton(
-                      tooltip: t('One set less', 'एक सेट कम'),
-                      visualDensity: VisualDensity.compact,
-                      color: Colors.white,
-                      disabledColor: Colors.white24,
-                      icon: const Icon(Icons.remove_rounded),
-                      onPressed: _setsShown > 0 ? () => _setTo(_setsShown - 1) : null,
-                    ),
-                    InkWell(
-                      onTap: _editSets,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: Text('$_setsShown SET',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800)),
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: t('One set more', 'एक सेट ज़्यादा'),
-                      visualDensity: VisualDensity.compact,
-                      color: Colors.white,
-                      icon: const Icon(Icons.add_rounded),
-                      onPressed: () => _setTo(_setsShown + 1),
-                    ),
-                  ]),
-                ),
-                ],
-              ),
-            ),
+                  // Sappan retail: no SET control — customers pick single pieces.
                   SizedBox(
                     width: iw,
                     height: ih,

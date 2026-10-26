@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import '../l10n.dart';
 
 import 'package:flutter/material.dart';
+import '../services/sappan_share.dart';
+import '../models/folder.dart' show displayFolderName;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -180,9 +182,17 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
     final currentPhoto = byId[_ids[_currentIndex]];
 
     if (currentPhoto == null) {
+      // Opened from a share link before the catalogue is ready → wait for it.
+      final loading = !ref.watch(catalogProvider).hasValue || ref.watch(photosProvider).isEmpty;
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: UText('Photo not found.')),
+        backgroundColor: const Color(0xFF16060A),
+        appBar: AppBar(backgroundColor: const Color(0xFF16060A), foregroundColor: Colors.white),
+        body: Center(
+          child: loading
+              ? const CircularProgressIndicator(color: Color(0xFFC6A15B))
+              : const Text('This saree is no longer available.',
+                  style: TextStyle(color: Colors.white, fontFamily: 'Playfair', fontSize: 18)),
+        ),
       );
     }
 
@@ -225,6 +235,13 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
           ],
         ),
         actions: [
+          // Sappan: share this saree — WhatsApp, copy link, … (opens the app
+          // on the saree, or the store when the app is not installed).
+          IconButton(
+            tooltip: 'Share',
+            icon: const Icon(Icons.ios_share_rounded),
+            onPressed: () => shareSaree(context, currentPhoto),
+          ),
           const SizedBox(width: 6),
         ],
       ),
@@ -386,7 +403,7 @@ class _DetailFooter extends StatelessWidget {
                       if (photo.designNumber != null)
                         _Meta(label: 'Design', value: photo.designNumber!),
                       if (photo.folder.isNotEmpty)
-                        _Meta(label: 'Folder', value: photo.folder),
+                        _Meta(label: 'Collection', value: displayFolderName(photo.folder)),
                     ],
                   ),
                 ],

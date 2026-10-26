@@ -174,14 +174,15 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
                     ),
                     const SizedBox(height: 14),
                     const Text(
-                      'A curated house of luxury sarees, inspired by the great weaving '
-                      'traditions of India — delivered to your door, anywhere in the country. '
+                      'A curated house of designer sarees — zari and thread embroidery, '
+                      'Swarovski and sequin work, Banarasi and organza weaves, bandhej, '
+                      'mirror work and more. Delivered to your door, anywhere in India. '
                       'Begin with just one saree.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 14.5, height: 1.55, color: kInk),
                     ),
                     const SizedBox(height: 16),
-                    const HeritageWeaves(),
+                    const HouseCrafts(compact: true),
                     const SizedBox(height: 26),
                     const Text('Sign up — takes 30 seconds',
                         style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
@@ -287,5 +288,61 @@ class HeritageWeaves extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+/// The crafts of the house — name + one line each (home + sign-up).
+class HouseCrafts extends StatelessWidget {
+  final bool compact;
+  const HouseCrafts({super.key, this.compact = false});
+
+  @override
+  Widget build(BuildContext context) {
+    if (compact) {
+      return Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final c in kHouseCrafts)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: kLinen,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: kGold, width: 0.8),
+              ),
+              child: Text(c.craft,
+                  style: const TextStyle(
+                      fontFamily: 'Playfair', fontSize: 13.5, fontWeight: FontWeight.w700, color: kMaroon)),
+            ),
+        ],
+      );
+    }
+    return Column(children: [
+      for (final c in kHouseCrafts)
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+          decoration: BoxDecoration(
+            color: kPaper,
+            border: Border.all(color: kHairline, width: 0.8),
+          ),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(width: 2, height: 34, color: kGold),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(c.craft,
+                    style: const TextStyle(
+                        fontFamily: 'Playfair', fontSize: 16, fontWeight: FontWeight.w700, color: kMaroon)),
+                const SizedBox(height: 3),
+                Text(c.line, style: const TextStyle(fontSize: 13, height: 1.45, color: kInk)),
+              ]),
+            ),
+          ]),
+        ),
+    ]);
   }
 }

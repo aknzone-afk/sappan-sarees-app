@@ -341,3 +341,92 @@ exports.spHealth = endpoint(async () => {
   const s = (await db().collection("sappan_settings").doc("telegram").get()).data();
   return { ok: true, group: chat ? (s && s.title) || "set" : null };
 }, { secrets: [TG_TOKEN] });
+
+// ───────────────────────── share links (owner 26-Oct-2026) ─────────────────────────
+
+const IOS_STORE = "https://apps.apple.com/app/id6826903241";
+const PLAY_STORE = "https://play.google.com/store/apps/details?id=com.sappansarees.retailapp";
+const SHARE_FN = "https://asia-south1-akn-chat-a7dd8.cloudfunctions.net";
+let _prices = { at: 0, p: {} };
+async function wholesaleOf(id) {
+  if (Date.now() - _prices.at > 10 * 60e3) {
+    try {
+      const r = await fetch("https://aknzone-afk.github.io/akn-zone-data/app/prices.json?t=" + Date.now());
+      const j = await r.json();
+      _prices = { at: Date.now(), p: (j && j.p) || {} };
+    } catch (e) { /* keep old */ }
+  }
+  const v = Number(_prices.p[id]);
+  return Number.isFinite(v) && v > 0 ? v : null;
+}
+const okId = (id) => /^[A-Za-z0-9_-]{10,80}$/.test(String(id || ""));
+const rupees = (n) => "₹" + Number(n).toLocaleString("en-IN");
+
+/** The saree photo with the shop's bottom label strip cropped off (link previews). */
+exports.spShareImg = onRequest({ ...OPTS, memory: "512MiB" }, async (req, res) => {
+  const id = String(req.query.d || "");
+  if (!okId(id)) return res.status(400).send("bad id");
+  try {
+    const r = await fetch(`https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w1200`);
+    if (!r.ok) return res.status(404).send("not found");
+    const buf = Buffer.from(await r.arrayBuffer());
+    const sharp = require("sharp");
+    const img = sharp(buf);
+    const m = await img.metadata();
+    const h = Math.round(m.height * 0.80); // the price / fabric boxes sit in the bottom ~20%
+    const out = await img.extract({ left: 0, top: 0, width: m.width, height: h }).jpeg({ quality: 84 }).toBuffer();
+    res.set("Cache-Control", "public, max-age=86400");
+    res.type("image/jpeg").send(out);
+  } catch (e) {
+    logger.warn("spShareImg", { error: e.message });
+    res.status(500).send("error");
+  }
+});
+
+/** Share page: shows the saree, opens the app on it, else the right store. */
+exports.spShare = onRequest({ ...OPTS }, async (req, res) => {
+  const id = String(req.query.d || "");
+  if (!okId(id)) return res.redirect(302, IOS_STORE);
+  const w = await wholesaleOf(id);
+  const price = w && w >= 400 ? rupees(w * 2) : null;
+  const img = `${SHARE_FN}/spShareImg?d=${encodeURIComponent(id)}`;
+  const deep = `sappansarees://open/p/${encodeURIComponent(id)}`;
+  const intent = `intent://open/p/${encodeURIComponent(id)}#Intent;scheme=sappansarees;package=com.sappansarees.retailapp;S.browser_fallback_url=${encodeURIComponent(PLAY_STORE)};end`;
+  const title = "Sappan Sarees" + (price ? " · " + price : "");
+  res.set("Cache-Control", "public, max-age=600");
+  res.type("html").send(`<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="The finest weaves of India — tap to view this saree in the Sappan Sarees app.">
+<meta property="og:image" content="${img}">
+<meta property="og:type" content="product">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+ body{margin:0;background:#22030b;color:#fffcf7;font-family:Georgia,serif;text-align:center}
+ .wrap{max-width:520px;margin:0 auto;padding:22px 16px 40px}
+ h1{letter-spacing:.45em;font-size:26px;margin:8px 0 2px;color:#fffcf7}
+ .sub{color:#c6a15b;letter-spacing:.3em;font:600 10px/1 system-ui,sans-serif;margin-bottom:18px}
+ img{width:100%;border:1px solid #c6a15b55;display:block}
+ .price{font-size:26px;color:#e9d9b4;margin:16px 0 4px}
+ a.btn{display:block;margin:14px 0 0;padding:15px;border:1px solid #c6a15b;color:#22030b;background:#e9d9b4;text-decoration:none;font:700 13px system-ui,sans-serif;letter-spacing:.18em}
+ a.alt{background:transparent;color:#e9d9b4}
+ .note{font:12px system-ui,sans-serif;color:#e9d9b4aa;margin-top:18px;line-height:1.5}
+</style></head><body><div class="wrap">
+<h1>SAPPAN</h1><div class="sub">THE FINEST WEAVES OF INDIA</div>
+<img src="${img}" alt="Saree">
+${price ? `<div class="price">${esc(price)}</div>` : ""}
+<a class="btn" id="open" href="${deep}">OPEN IN THE APP</a>
+<a class="btn alt" id="get" href="${IOS_STORE}">GET THE APP</a>
+<div class="note">New here? Install Sappan Sarees, sign up in 30 seconds, then tap this link again to open this saree.</div>
+</div><script>
+ var ua=navigator.userAgent||"", android=/Android/i.test(ua), ios=/iPhone|iPad|iPod/i.test(ua);
+ var get=document.getElementById("get"), open=document.getElementById("open");
+ get.href = android ? ${JSON.stringify(PLAY_STORE)} : ${JSON.stringify(IOS_STORE)};
+ if (android) open.href = ${JSON.stringify(intent)};
+ function go(){ if(android){ location.href=${JSON.stringify(intent)}; }
+   else if(ios){ var t=Date.now(); location.href=${JSON.stringify(deep)};
+     setTimeout(function(){ if(!document.hidden && Date.now()-t<2500) location.href=${JSON.stringify(IOS_STORE)}; },1600); } }
+ if(android||ios) setTimeout(go,350);
+</script></body></html>`);
+});

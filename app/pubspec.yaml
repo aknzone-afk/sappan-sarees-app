@@ -1,7 +1,7 @@
 name: catalog_app
 description: "Sappan Sarees retail saree catalog and ordering."
 publish_to: 'none'
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: ^3.5.0
