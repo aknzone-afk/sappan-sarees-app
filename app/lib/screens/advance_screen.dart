@@ -130,7 +130,7 @@ class _AdvanceScreenState extends ConsumerState<AdvanceScreen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        icon: const Icon(Icons.check_circle_rounded, size: 52, color: Color(0xFF2E7D32)),
+        icon: const Icon(Icons.check_circle_rounded, size: 52, color: Color(0xFF2F5D46)),
         title: Text(OrderService.isTrial(widget.number)
             ? 'TRIAL PASSED — ₹5 screenshot verified!'
             : 'Token received — order placed!'),

@@ -17,6 +17,8 @@ import '../services/photo_freshness.dart';
 import '../theme.dart';
 import 'retail_signup_screen.dart' show HeritageWeaves, HouseCrafts;
 import '../widgets/loading_collage.dart';
+import '../widgets/label_crop.dart';
+import '../widgets/shimmer.dart';
 
 /// SAPPAN SAREES home — a fashion-house storefront (owner 25-Oct-2026: "like
 /// Gucci / Armani, nobody may tell it is the B.B Synthetics app"): centred
@@ -103,18 +105,26 @@ class _Wordmark extends StatelessWidget {
   const _Wordmark();
   @override
   Widget build(BuildContext context) {
-    return const Column(mainAxisSize: MainAxisSize.min, children: [
-      Text('SAPPAN',
-          style: TextStyle(
-              fontFamily: 'Playfair',
-              fontSize: 25,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 9,
-              height: 1.0,
-              color: kMaroon)),
-      SizedBox(height: 4),
-      Text('S A R E E S',
-          style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w600, letterSpacing: 4.5, color: kGold, height: 1.0)),
+    // "SAPPAN" in couture serif; SAREES set small between gold rules.
+    Widget rule() => Container(width: 16, height: 0.8, color: kGold);
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      const Padding(
+        // trailing tracking would push the word off-centre
+        padding: EdgeInsets.only(left: 10),
+        child: Text('SAPPAN',
+            style: TextStyle(
+                fontFamily: kSerif, fontSize: 31, fontWeight: FontWeight.w600, letterSpacing: 10, height: 1.0, color: kMaroon)),
+      ),
+      const SizedBox(height: 5),
+      Row(mainAxisSize: MainAxisSize.min, children: [
+        rule(),
+        const Padding(
+          padding: EdgeInsets.only(left: 8, right: 3),
+          child: Text('SAREES',
+              style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w500, letterSpacing: 5, color: kGold, height: 1.0)),
+        ),
+        rule(),
+      ]),
     ]);
   }
 }
@@ -191,26 +201,26 @@ class _Storefront extends ConsumerWidget {
         const SliverToBoxAdapter(child: _SectionHead(eyebrow: 'JUST ARRIVED', title: 'New In', route: '/new')),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: 262,
+            height: 288,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 18),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: newIn.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              separatorBuilder: (_, __) => const SizedBox(width: 14),
               itemBuilder: (_, i) => _ProductTile(photo: newIn[i], ids: [for (final p in newIn) p.id]),
             ),
           ),
         ),
         const SliverToBoxAdapter(child: _SectionHead(eyebrow: 'THE HOUSE EDIT', title: 'Collections')),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
           sliver: SliverGrid.builder(
             itemCount: folders.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 240,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.70,
+              mainAxisSpacing: 26,
+              crossAxisSpacing: 14,
+              childAspectRatio: kCollectionTileAspect,
             ),
             itemBuilder: (context, i) => CollectionTile(folder: folders[i]),
           ),
@@ -263,23 +273,26 @@ class _HeroState extends State<_Hero> {
           controller: _page,
           itemCount: widget.photos.length,
           onPageChanged: (i) => setState(() => _i = i),
-          itemBuilder: (_, i) => CachedNetworkImage(
-            imageUrl: widget.photos[i].thumbUrl(),
-            cacheManager: photoCacheManager,
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter, // the saree, not its label
-            placeholder: (_, __) => Container(color: kLinen),
-            errorWidget: (_, __, ___) => Container(color: kLinen),
+          itemBuilder: (_, i) => LabelCrop(
+            child: CachedNetworkImage(
+              imageUrl: widget.photos[i].thumbUrl(),
+              cacheManager: photoCacheManager,
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter, // the saree, not its label
+              placeholder: (_, __) => const Shimmer(),
+              errorWidget: (_, __, ___) => Container(color: kLinen),
+            ),
           ),
         ),
+        // A soft ink veil only behind the words — the saree keeps its colour.
         const IgnorePointer(
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                stops: [0.30, 0.62, 0.80],
-                colors: [Color(0x00000000), Color(0xCC2A0710), Color(0xFF2A0710)],
+                stops: [0.42, 0.72, 1.0],
+                colors: [Color(0x00000000), Color(0x9921080E), Color(0xE61A0509)],
               ),
             ),
           ),
@@ -287,38 +300,37 @@ class _HeroState extends State<_Hero> {
         Positioned(
           left: 24,
           right: 24,
-          bottom: 28,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('THE NEW SEASON',
-                style: TextStyle(color: kGoldSoft, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 4)),
-            const SizedBox(height: 8),
+          bottom: 30,
+          child: Column(children: [
+            const Text('THE NEW SEASON', style: TextStyle(color: kGoldSoft, fontSize: 10.5, fontWeight: FontWeight.w500, letterSpacing: 5)),
+            const SizedBox(height: 10),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 700),
               child: Text(kHeroLines[_i % kHeroLines.length],
                   key: ValueKey(_i % kHeroLines.length),
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
-                      fontFamily: 'Playfair', color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700, height: 1.12)),
+                      fontFamily: kSerif, color: kPaper, fontSize: 40, fontWeight: FontWeight.w500, height: 1.05)),
             ),
-            const SizedBox(height: 16),
-            Row(children: [
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white, width: 1),
-                  shape: const RoundedRectangleBorder(),
-                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-                ),
-                onPressed: () => context.push('/new'),
-                child: const Text('DISCOVER', style: TextStyle(letterSpacing: 3.5, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 20),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: kPaper,
+                foregroundColor: kMaroon,
+                minimumSize: const Size(176, 48),
               ),
-              const Spacer(),
+              onPressed: () => context.push('/new'),
+              child: const Text('DISCOVER'),
+            ),
+            const SizedBox(height: 20),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               for (var k = 0; k < widget.photos.length; k++)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.only(left: 6),
-                  width: k == _i ? 18 : 6,
-                  height: 2,
-                  color: k == _i ? kGold : Colors.white54,
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  width: k == _i ? 22 : 8,
+                  height: 1.5,
+                  color: k == _i ? kGoldSoft : Colors.white38,
                 ),
             ]),
           ]),
@@ -336,20 +348,25 @@ class _SectionHead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 34, 18, 16),
+      padding: const EdgeInsets.fromLTRB(20, 44, 20, 20),
       child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(eyebrow, style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, letterSpacing: 3.6, color: kGold)),
+            Text(eyebrow, style: kEyebrow),
             const SizedBox(height: 6),
             Text(title,
-                style: const TextStyle(fontFamily: 'Playfair', fontSize: 27, fontWeight: FontWeight.w700, color: kMaroon, height: 1.05)),
+                style: const TextStyle(fontFamily: kSerif, fontSize: 34, fontWeight: FontWeight.w500, color: kMaroon, height: 1.0)),
           ]),
         ),
         if (route != null)
-          TextButton(
-            onPressed: () => context.push(route!),
-            child: const Text('VIEW ALL', style: TextStyle(letterSpacing: 2.4, fontSize: 11.5)),
+          InkWell(
+            onTap: () => context.push(route!),
+            child: Container(
+              padding: const EdgeInsets.only(top: 10, bottom: 3),
+              decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: kMaroon, width: 1))),
+              child: const Text('VIEW ALL',
+                  style: TextStyle(letterSpacing: 2.4, fontSize: 11, fontWeight: FontWeight.w600, color: kMaroon)),
+            ),
           ),
       ]),
     );
@@ -365,33 +382,40 @@ class _ProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final price = photo.price;
     return SizedBox(
-      width: 158,
+      width: 172,
       child: InkWell(
         onTap: () => context.push('/photo/${Uri.encodeComponent(photo.id)}', extra: ids),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
-            height: 198,
-            width: 158,
-            child: CachedNetworkImage(
-              imageUrl: photo.thumbUrl(),
-              cacheManager: photoCacheManager,
-              memCacheWidth: gridDecodeWidth(context),
-              fit: BoxFit.cover,
-              placeholder: (_, __) => Container(color: kLinen),
-              errorWidget: (_, __, ___) => Container(color: kLinen),
+            height: 228,
+            width: 172,
+            child: LabelCrop(
+              child: CachedNetworkImage(
+                imageUrl: photo.thumbUrl(),
+                cacheManager: photoCacheManager,
+                memCacheWidth: gridDecodeWidth(context),
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                placeholder: (_, __) => const Shimmer(),
+                errorWidget: (_, __, ___) => Container(color: kLinen),
+              ),
             ),
           ),
-          const SizedBox(height: 10),
-          if (price != null)
-            Text(OrderService.formatRupees(price),
-                style: const TextStyle(fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, color: kMaroon)),
+          const SizedBox(height: 12),
+          const Text('NEW SEASON', style: TextStyle(fontSize: 9.5, letterSpacing: 2.2, color: kInkSoft)),
+          const SizedBox(height: 4),
+          if (price != null) Text(OrderService.formatRupees(price), style: kPriceStyle.copyWith(fontSize: 15)),
         ]),
       ),
     );
   }
 }
 
-/// A collection: full-bleed cover, name in white serif over a wine veil.
+/// Width/height of a [CollectionTile] (portrait cover + caption beneath).
+const double kCollectionTileAspect = 0.60;
+
+/// A collection, editorial style: a clean portrait cover with the name set
+/// beneath it on the ivory page (no veil over the saree).
 class CollectionTile extends StatelessWidget {
   final CatalogFolder folder;
   const CollectionTile({super.key, required this.folder});
@@ -399,50 +423,36 @@ class CollectionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => context.push('/folder/${Uri.encodeComponent(folder.path.isEmpty ? "_root" : folder.path)}'),
-      child: Stack(fit: StackFit.expand, children: [
-        if (folder.coverThumbPath != null)
-          CachedNetworkImage(
-            imageUrl: DriveUrls.thumbnail(folder.coverThumbPath!, width: kThumbnailWidth),
-            cacheManager: photoCacheManager,
-            memCacheWidth: gridDecodeWidth(context),
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter, // the saree, not its label
-            placeholder: (_, __) => Container(color: kLinen),
-            errorWidget: (_, __, ___) => Container(color: kLinen),
-          )
-        else
-          Container(color: kLinen),
-        const DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.42, 0.66, 0.80],
-              colors: [Color(0x00000000), Color(0xD92A0710), Color(0xFF2A0710)],
-            ),
-          ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Expanded(
+          child: folder.coverThumbPath != null
+              ? LabelCrop(
+                  child: CachedNetworkImage(
+                    imageUrl: DriveUrls.thumbnail(folder.coverThumbPath!, width: kThumbnailWidth),
+                    cacheManager: photoCacheManager,
+                    memCacheWidth: gridDecodeWidth(context),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter, // the saree, not its label
+                    placeholder: (_, __) => const Shimmer(),
+                    errorWidget: (_, __, ___) => Container(color: kLinen),
+                  ),
+                )
+              : Container(color: kLinen),
         ),
-        Positioned(
-          left: 12,
-          right: 12,
-          bottom: 14,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              folder.path.isEmpty ? 'The Collection' : _titleCase(folder.displayName),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  fontFamily: 'Playfair', color: Colors.white, fontSize: 17.5, fontWeight: FontWeight.w700, height: 1.15),
-            ),
-            const SizedBox(height: 6),
-            Row(children: [
-              Container(width: 18, height: 1, color: kGold),
-              const SizedBox(width: 8),
-              Text('${folder.photoCount} DESIGNS',
-                  style: const TextStyle(color: kGoldSoft, fontSize: 9.5, letterSpacing: 2.4, fontWeight: FontWeight.w600)),
-            ]),
-          ]),
+        const SizedBox(height: 12),
+        Text(
+          folder.path.isEmpty ? 'The Collection' : _titleCase(folder.displayName),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontFamily: kSerif, color: kMaroon, fontSize: 21, fontWeight: FontWeight.w600, height: 1.1),
         ),
+        const SizedBox(height: 5),
+        Row(children: [
+          Text('${folder.photoCount} DESIGNS',
+              style: const TextStyle(color: kInkSoft, fontSize: 9.5, letterSpacing: 2.2, fontWeight: FontWeight.w500)),
+          const SizedBox(width: 8),
+          const Icon(Icons.arrow_forward, size: 12, color: kGold),
+        ]),
       ]),
     );
   }
@@ -468,7 +478,7 @@ class _WeavesBand extends StatelessWidget {
         SizedBox(height: 8),
         Text('Crafted by Hand,\nFinished in Gold',
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: 'Playfair', fontSize: 27, fontWeight: FontWeight.w700, color: kMaroon, height: 1.15)),
+            style: TextStyle(fontFamily: kSerif, fontSize: 31, fontWeight: FontWeight.w700, color: kMaroon, height: 1.15, fontFeatures: [FontFeature.liningFigures()])),
         SizedBox(height: 10),
         Text(
           'Every Sappan saree carries hours of craft — zari woven into the pallu, embroidery on every '
@@ -605,7 +615,7 @@ class _EmptyCatalogView extends StatelessWidget {
         Center(child: _Wordmark()),
         SizedBox(height: 20),
         Text('Our new collection is arriving shortly.',
-            textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Playfair', fontSize: 18, color: kMaroon)),
+            textAlign: TextAlign.center, style: TextStyle(fontFamily: kSerif, fontSize: 20.7, color: kMaroon, fontFeatures: [FontFeature.liningFigures()])),
       ],
     );
   }

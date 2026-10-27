@@ -295,12 +295,12 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(
-            color: chosen ? const Color(0xFF2E7D32) : const Color(0xFFE8E3DA)),
+            color: chosen ? const Color(0xFF2F5D46) : const Color(0xFFE8E3DA)),
       ),
       child: ListTile(
         onTap: selectable ? () => setState(() { _party = pt; _loadTransportOverride(); }) : null,
         leading: Icon(chosen ? Icons.check_circle_rounded : Icons.storefront_rounded,
-            color: chosen ? const Color(0xFF2E7D32) : null),
+            color: chosen ? const Color(0xFF2F5D46) : null),
         title: Text(v('name'), style: const TextStyle(fontWeight: FontWeight.w800)),
         subtitle: Text(lines.join('\n')),
         isThreeLine: lines.length > 1,
@@ -832,7 +832,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         icon: Icon(sent ? Icons.check_circle_rounded : Icons.schedule_rounded,
-            size: 48, color: sent ? const Color(0xFF2E7D32) : Colors.orange),
+            size: 48, color: sent ? const Color(0xFF2F5D46) : const Color(0xFFB08A45)),
         title: Text(sent ? t('Order placed!', 'ऑर्डर हो गया!') : t('Order saved', 'ऑर्डर सेव हो गया')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -903,7 +903,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     if (info != null && _bookingPlace.text.trim().isNotEmpty) {
       if (OrderService.placeMatches(_bookingPlace.text, info)) {
         placeHelper = '✓ Matches pincode (${info.label})';
-        placeColor = const Color(0xFF2E7D32);
+        placeColor = const Color(0xFF2F5D46);
       } else {
         placeHelper = '⚠ Pincode is ${info.label} — please check';
         placeColor = Colors.orange.shade800;
@@ -919,7 +919,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
         pinColor = scheme.error;
       } else if (info != null) {
         pinHelper = '📍 ${info.label}';
-        pinColor = const Color(0xFF2E7D32);
+        pinColor = const Color(0xFF2F5D46);
       }
     }
     final kind = OrderService.taxIdKind(_taxId.text);
@@ -1205,13 +1205,13 @@ class _ItemRow extends StatelessWidget {
                 if (pickLabel != null)
                   Text('✓ $pickLabel',
                       style: const TextStyle(
-                          fontSize: 11, color: Color(0xFF2E7D32)))
+                          fontSize: 11, color: Color(0xFF2F5D46)))
                 else if (reading)
                   Text(t('Reading your marks…', 'निशान पढ़ रहे हैं…'),
                       style: TextStyle(fontSize: 11, color: scheme.primary))
                 else if (fromMarks)
                   Text(t('✓ Pieces from your marks', '✓ आपके निशान से पीस'),
-                      style: TextStyle(fontSize: 11, color: Color(0xFF2E7D32))),
+                      style: TextStyle(fontSize: 11, color: Color(0xFF2F5D46))),
               ],
             ),
           ),

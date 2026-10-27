@@ -1,3 +1,4 @@
+import 'package:catalog_app/theme.dart';
 import 'package:catalog_app/widgets/caps_text.dart';
 import 'package:flutter/material.dart';
 import '../config.dart';
@@ -219,7 +220,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                   const SizedBox(height: 16),
                   const Text('Your orders will appear here',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'Playfair', fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF5E0B1F))),
+                      style: TextStyle(fontFamily: kSerif, fontSize: 25.3, fontWeight: FontWeight.w700, color: Color(0xFF5E0B1F), fontFeatures: [FontFeature.liningFigures()])),
                   const SizedBox(height: 8),
                   const Text('Discover the finest weaves of India — begin with just one saree.',
                       textAlign: TextAlign.center, style: TextStyle(fontSize: 14, height: 1.5)),
@@ -240,7 +241,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
                   child: ListTile(
                     leading: Icon(
                       sent ? Icons.check_circle_rounded : Icons.schedule_rounded,
-                      color: sent ? const Color(0xFF2E7D32) : Colors.orange,
+                      color: sent ? const Color(0xFF2F5D46) : const Color(0xFFB08A45),
                     ),
                     // Owner: show the shop's serial, not the internal AKN id.
                     title: Text(

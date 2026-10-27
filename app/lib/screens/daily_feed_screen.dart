@@ -1,3 +1,4 @@
+import 'package:catalog_app/theme.dart';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -221,7 +222,7 @@ class _DayBubble extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 // the number that opens — never more than what is inside
                 Text('${photos.length} new design${photos.length == 1 ? '' : 's'}',
-                    style: const TextStyle(fontFamily: 'Playfair', fontWeight: FontWeight.w700, fontSize: 19, color: Color(0xFF5E0B1F))),
+                    style: const TextStyle(fontFamily: kSerif, fontWeight: FontWeight.w700, fontSize: 21.8, color: Color(0xFF5E0B1F), fontFeatures: [FontFeature.liningFigures()])),
                 const SizedBox(height: 8),
                 Row(children: [
                   for (final p in photos.take(4))

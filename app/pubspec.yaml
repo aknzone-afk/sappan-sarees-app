@@ -1,7 +1,7 @@
 name: catalog_app
 description: "Sappan Sarees retail saree catalog and ordering."
 publish_to: 'none'
-version: 1.0.0+4
+version: 1.0.0+5
 
 environment:
   sdk: ^3.5.0
@@ -81,13 +81,23 @@ flutter:
     - assets/seed/seed_manifest.json
     - assets/data/transports.json
   fonts:
-    - family: Playfair
+    # Couture pairing (ui-ux-pro-max "luxury fashion"): Cormorant Garamond
+    # display + Jost body. Static Latin+₹ cuts of the Google Fonts (OFL).
+    - family: Cormorant
       fonts:
-        - asset: assets/fonts/Playfair-400.ttf
-        - asset: assets/fonts/Playfair-600.ttf
+        - asset: assets/fonts/Cormorant-500.ttf
+          weight: 500
+        - asset: assets/fonts/Cormorant-600.ttf
           weight: 600
-        - asset: assets/fonts/Playfair-700.ttf
+        - asset: assets/fonts/Cormorant-700.ttf
           weight: 700
+    - family: Jost
+      fonts:
+        - asset: assets/fonts/Jost-400.ttf
+        - asset: assets/fonts/Jost-500.ttf
+          weight: 500
+        - asset: assets/fonts/Jost-600.ttf
+          weight: 600
 
 flutter_launcher_icons:
   android: "ic_launcher"

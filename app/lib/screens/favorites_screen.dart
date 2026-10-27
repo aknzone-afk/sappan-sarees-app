@@ -1,3 +1,4 @@
+import 'package:catalog_app/theme.dart';
 import 'package:catalog_app/widgets/caps_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -191,7 +192,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('SHOPPING BAG${favPhotos.isEmpty ? '' : ' · ${favPhotos.length}'}',
-            style: const TextStyle(fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 2.4)),
+            style: const TextStyle(fontFamily: kSerif, fontSize: 19.5, fontWeight: FontWeight.w700, letterSpacing: 2.4, fontFeatures: [FontFeature.liningFigures()])),
         actions: [
           IconButton(
               tooltip: 'My orders',
@@ -216,7 +217,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                     const SizedBox(height: 12),
                     Text(t('Your shopping bag is empty', 'आपका बैग खाली है'),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontFamily: 'Playfair', fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF5E0B1F))),
+                        style: const TextStyle(fontFamily: kSerif, fontSize: 25.3, fontWeight: FontWeight.w700, color: Color(0xFF5E0B1F), fontFeatures: [FontFeature.liningFigures()])),
                     const SizedBox(height: 4),
                     Text(
                       t('Tap CHOOSE COLOUR on any design to add it here.', 'किसी भी डिज़ाइन पर "रंग चुनें" दबाएँ।'),

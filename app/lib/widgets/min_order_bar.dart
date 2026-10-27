@@ -46,7 +46,7 @@ class MinOrderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     if (addOnTo != null) {
-      const g = Color(0xFF2E7D32);
+      const g = Color(0xFF2F5D46);
       return Container(
         width: double.infinity,
         padding: EdgeInsets.all(compact ? 8 : 12),

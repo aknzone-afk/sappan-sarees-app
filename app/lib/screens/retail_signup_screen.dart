@@ -139,7 +139,7 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
       pinColor = Theme.of(context).colorScheme.error;
     } else if (_pin != null) {
       pinHelper = '📍 ${_pin!.label}';
-      pinColor = const Color(0xFF2E7D32);
+      pinColor = const Color(0xFF2F5D46);
     }
     return Scaffold(
       body: SafeArea(
@@ -159,11 +159,11 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
                       'Sappan Sarees',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontFamily: 'Playfair',
-                          fontSize: 30,
+                          fontFamily: kSerif,
+                          fontSize: 34.5,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 2.2,
-                          color: kMaroon),
+                          color: kMaroon, fontFeatures: [FontFeature.liningFigures()]),
                     ),
                     const SizedBox(height: 6),
                     const Text(
@@ -280,7 +280,7 @@ class HeritageWeaves extends StatelessWidget {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Text(w.weave,
                   style: const TextStyle(
-                      fontFamily: 'Playfair', fontSize: 13.5, fontWeight: FontWeight.w700, color: kMaroon)),
+                      fontFamily: kSerif, fontSize: 15.5, fontWeight: FontWeight.w700, color: kMaroon, fontFeatures: [FontFeature.liningFigures()])),
               const SizedBox(height: 1),
               Text(w.region.toUpperCase(),
                   style: const TextStyle(fontSize: 9.5, letterSpacing: 1.6, color: kInk)),
@@ -314,7 +314,7 @@ class HouseCrafts extends StatelessWidget {
               ),
               child: Text(c.craft,
                   style: const TextStyle(
-                      fontFamily: 'Playfair', fontSize: 13.5, fontWeight: FontWeight.w700, color: kMaroon)),
+                      fontFamily: kSerif, fontSize: 15.5, fontWeight: FontWeight.w700, color: kMaroon, fontFeatures: [FontFeature.liningFigures()])),
             ),
         ],
       );
@@ -336,7 +336,7 @@ class HouseCrafts extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(c.craft,
                     style: const TextStyle(
-                        fontFamily: 'Playfair', fontSize: 16, fontWeight: FontWeight.w700, color: kMaroon)),
+                        fontFamily: kSerif, fontSize: 18.4, fontWeight: FontWeight.w700, color: kMaroon, fontFeatures: [FontFeature.liningFigures()])),
                 const SizedBox(height: 3),
                 Text(c.line, style: const TextStyle(fontSize: 13, height: 1.45, color: kInk)),
               ]),

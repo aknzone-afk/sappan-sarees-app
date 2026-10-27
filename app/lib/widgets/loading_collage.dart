@@ -1,3 +1,4 @@
+import 'package:catalog_app/theme.dart';
 import 'package:catalog_app/widgets/caps_text.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
@@ -155,7 +156,7 @@ class _LoadingCollageState extends ConsumerState<LoadingCollage>
               const SizedBox(height: 30),
               const Text('SAPPAN',
                   style: TextStyle(
-                      fontFamily: 'Playfair', fontSize: 34, fontWeight: FontWeight.w700, letterSpacing: 12, color: Color(0xFFFFFCF7))),
+                      fontFamily: kSerif, fontSize: 39.1, fontWeight: FontWeight.w700, letterSpacing: 12, color: Color(0xFFFFFCF7), fontFeatures: [FontFeature.liningFigures()])),
               const SizedBox(height: 8),
               const Text('THE FINEST WEAVES OF INDIA',
                   style: TextStyle(fontSize: 11, letterSpacing: 4, fontWeight: FontWeight.w600, color: Color(0xFFC6A15B))),
@@ -481,12 +482,11 @@ class _GlassPanel extends StatelessWidget {
                   ],
                 ),
                 style: TextStyle(
-                  fontFamily: 'Playfair',
+                  fontFamily: kSerif,
                   fontWeight: FontWeight.w700,
-                  fontSize: 24,
+                  fontSize: 27.6,
                   color: Color(0xFFFFFCF7),
-                  letterSpacing: 8,
-                ),
+                  letterSpacing: 8, fontFeatures: [FontFeature.liningFigures()]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 2),

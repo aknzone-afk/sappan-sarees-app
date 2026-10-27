@@ -311,12 +311,11 @@ class _GateWordmark extends StatelessWidget {
           'Sappan Sarees',
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontFamily: 'Playfair',
-            fontSize: 26,
+            fontFamily: kSerif,
+            fontSize: 29.9,
             fontWeight: FontWeight.w700,
             letterSpacing: 2.0,
-            color: kInk,
-          ),
+            color: kInk, fontFeatures: [FontFeature.liningFigures()]),
         ),
       ],
     );

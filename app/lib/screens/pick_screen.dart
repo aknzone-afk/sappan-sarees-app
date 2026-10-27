@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../theme.dart';
 import '../l10n.dart';
 
 import '../models/photo.dart';
@@ -593,15 +594,19 @@ class _PickScreenState extends ConsumerState<PickScreen> {
               ),
             Container(
                 width: double.infinity,
-                color: const Color(0xFF2A0B12),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                decoration: const BoxDecoration(
+                  border: Border(
+                      top: BorderSide(color: Color(0x40E9D9B4)), bottom: BorderSide(color: Color(0x40E9D9B4))),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                 child: Text(
                   _s.isEmpty
                       ? (_setOnly ? 'TAP THE PHOTO = 1 FULL SET' : 'TAP A SAREE TO SELECT IT')
                       : _s.summary(count),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w900, fontSize: 21, height: 1.25),
+                  style: _s.isEmpty
+                      ? const TextStyle(color: kGoldSoft, fontWeight: FontWeight.w500, fontSize: 13, letterSpacing: 3)
+                      : const TextStyle(fontFamily: kSerif, color: kPaper, fontWeight: FontWeight.w600, fontSize: 23, height: 1.2),
                 ),
               ),
             Expanded(
@@ -735,11 +740,14 @@ class _PickScreenState extends ConsumerState<PickScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: Material(
-          color: const Color(0xFF1B1A18),
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF16060A),
+            border: Border(top: BorderSide(color: Color(0x40E9D9B4))),
+          ),
           child: SafeArea(
             top: false,
-            minimum: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            minimum: const EdgeInsets.fromLTRB(16, 10, 12, 10),
             child: Row(
               children: [
                 Expanded(
@@ -747,19 +755,20 @@ class _PickScreenState extends ConsumerState<PickScreen> {
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      'DESIGN NO. - ${(photo.designNumber ?? '-').toUpperCase()}',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 24,
-                          letterSpacing: 0.5),
-                    ),
+                    child: Text.rich(TextSpan(children: [
+                      const TextSpan(
+                          text: 'DESIGN NO.  ',
+                          style: TextStyle(color: kGoldSoft, fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 2.6)),
+                      TextSpan(
+                          text: (photo.designNumber ?? '-').toUpperCase(),
+                          style: const TextStyle(
+                              fontFamily: kSerif, color: kPaper, fontWeight: FontWeight.w600, fontSize: 26)),
+                    ])),
                   ),
                 ),
                 FilledButton(
                   style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFF5E0B1F)),
+                      backgroundColor: kPaper, foregroundColor: kMaroon, minimumSize: const Size(120, 48)),
                   onPressed: _done,
                   child: Text(t('DONE', 'हो गया')),
                 ),

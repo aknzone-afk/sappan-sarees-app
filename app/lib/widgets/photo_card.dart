@@ -14,6 +14,7 @@ import '../services/photo_freshness.dart';
 import '../services/picks_service.dart';
 import '../services/pieces_service.dart';
 import 'pick_preview.dart';
+import 'shimmer.dart';
 import '../services/price_check.dart';
 import '../services/order_service.dart';
 import '../theme.dart';
@@ -127,26 +128,21 @@ class PhotoCard extends ConsumerWidget {
                 ),
               ),
             ),
-          // Sappan: the retail price as a frosted wine tag on the photo
+          // Sappan: the retail price as a frosted ivory tag on the photo
           // (no design number shown on the card).
           if (pickSummary == null && price == PriceDisplay.show && photo.price != null)
             Positioned(
-              top: 8,
-              right: 8,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(3),
+              // top corner: the photo's own label strip sits at the bottom
+              left: 0,
+              top: 10,
+              child: ClipRect(
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xB35E0B1F),
-                      border: Border.all(color: const Color(0xCCC6A15B), width: 0.8),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 11, 5),
+                    color: const Color(0xD9FFFCF7),
                     child: Text(OrderService.formatRupees(photo.price!),
-                        style: const TextStyle(
-                            fontFamily: 'Playfair', color: Color(0xFFFFFCF7), fontSize: 14, fontWeight: FontWeight.w700)),
+                        style: kPriceStyle.copyWith(fontSize: 13.5, fontWeight: FontWeight.w600, color: kMaroon)),
                   ),
                 ),
               ),
@@ -198,40 +194,44 @@ class PhotoCard extends ConsumerWidget {
         // Owner 12-Oct: in the CART no SELECTED strip (everything there is
         // selected) — only a ✕ on the photo corner. Elsewhere: white line + box.
         if (!removeMode)
-          Container(
-            color: kPaper,
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
-              Material(
-                color: pickLabel != null ? kMaroon : kPaper,
-                shape: const RoundedRectangleBorder(side: BorderSide(color: kGold, width: 0.8)),
-                child: InkWell(
-                  onTap: () {
-                    precacheImage(
-                        CachedNetworkImageProvider(photo.detailUrl(), cacheManager: photoCacheManager), context);
-                    context.push('/pick/${Uri.encodeComponent(photo.id)}');
-                  },
-                  child: SizedBox(
-                    height: 30,
-                    child: Center(
-                      child: Text(
-                        pickLabel != null
-                            ? '✓ IN YOUR BAG'
-                            : (isFav ? t('IN BAG · CHOOSE COLOUR', 'बैग में · रंग चुनें') : t('CHOOSE COLOUR', 'रंग चुनें')),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: pickLabel != null ? kGoldSoft : kMaroon,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 10.5,
-                          letterSpacing: 1.8,
-                        ),
+          // Quiet text line under the photo; a wine bar once it is in the bag.
+          Material(
+            color: pickLabel != null ? kMaroon : kPaper,
+            child: InkWell(
+              onTap: () {
+                precacheImage(
+                    CachedNetworkImageProvider(photo.detailUrl(), cacheManager: photoCacheManager), context);
+                context.push('/pick/${Uri.encodeComponent(photo.id)}');
+              },
+              child: Container(
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                decoration: pickLabel != null
+                    ? null
+                    : const BoxDecoration(border: Border(bottom: BorderSide(color: kHairline))),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Flexible(
+                    child: Text(
+                      pickLabel != null
+                          ? '✓  IN YOUR BAG'
+                          : (isFav ? t('IN BAG · CHOOSE COLOUR', 'बैग में · रंग चुनें') : t('CHOOSE COLOUR', 'रंग चुनें')),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: pickLabel != null ? kPaper : kMaroon,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 10.5,
+                        letterSpacing: 2,
                       ),
                     ),
                   ),
-                ),
+                  if (pickLabel == null) ...[
+                    const SizedBox(width: 6),
+                    const Icon(Icons.arrow_forward, size: 12, color: kGold),
+                  ],
+                ]),
               ),
-            ]),
+            ),
           ),
       ]),
     );
@@ -284,17 +284,7 @@ class _EditedFileImageState extends ConsumerState<_EditedFileImage> {
 class _Skeleton extends StatelessWidget {
   const _Skeleton();
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      alignment: Alignment.center,
-      child: const SizedBox(
-        width: 22,
-        height: 22,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const Shimmer();
 }
 
 class _BrokenTile extends StatelessWidget {

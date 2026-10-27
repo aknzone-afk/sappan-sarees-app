@@ -1,3 +1,5 @@
+import 'package:catalog_app/theme.dart';
+import 'package:catalog_app/services/order_service.dart';
 import 'dart:math' as math;
 import 'package:catalog_app/widgets/caps_text.dart';
 import 'dart:typed_data';
@@ -191,7 +193,7 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
           child: loading
               ? const CircularProgressIndicator(color: Color(0xFFC6A15B))
               : const Text('This saree is no longer available.',
-                  style: TextStyle(color: Colors.white, fontFamily: 'Playfair', fontSize: 18)),
+                  style: TextStyle(color: Colors.white, fontFamily: kSerif, fontSize: 20.7, fontFeatures: [FontFeature.liningFigures()])),
         ),
       );
     }
@@ -325,9 +327,9 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
              const SizedBox(height: 12),
              Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28),
+              // Couture: ivory bar on the dark stage, square corners.
               child: Material(
-              color: isFav ? const Color(0xFF3F0614) : const Color(0xFF5E0B1F),
-              borderRadius: BorderRadius.circular(12),
+              color: isFav ? kMaroon : kPaper,
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 // Replace this view, so DONE returns straight to the folder.
@@ -338,12 +340,12 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
                   width: double.infinity,
                   child: Center(
                     child: Text(
-                        isFav ? '✓ IN YOUR BAG — CHANGE COLOUR' : 'CHOOSE YOUR COLOUR',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15,
-                            letterSpacing: 1)),
+                        isFav ? '✓  IN YOUR BAG — CHANGE COLOUR' : 'CHOOSE YOUR COLOUR',
+                        style: TextStyle(
+                            color: isFav ? kPaper : kMaroon,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            letterSpacing: 2.8)),
                   ),
                 ),
               ),
@@ -391,8 +393,8 @@ class _DetailFooter extends StatelessWidget {
                       photo.fabricName!,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15, letterSpacing: 1.6,
                       ),
                     ),
                   const SizedBox(height: 2),
@@ -411,22 +413,15 @@ class _DetailFooter extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             if (price == PriceDisplay.show)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: scheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
+              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                const Text('PRICE',
+                    style: TextStyle(color: kGoldSoft, fontSize: 9.5, letterSpacing: 2.6, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 2),
+                Text(
+                  photo.price != null ? OrderService.formatRupees(photo.price!) : priceLabel(photo, price),
+                  style: kPriceStyle.copyWith(color: kPaper, fontSize: 21, fontWeight: FontWeight.w500),
                 ),
-                child: UText(
-                  priceLabel(photo, price),
-                  style: TextStyle(
-                    color: scheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              ]),
           ],
         ),
       ),

@@ -11,7 +11,7 @@ import '../models/filter_state.dart' as fs;
 import '../models/folder.dart';
 import '../models/photo.dart';
 import '../providers/providers.dart';
-import 'home_screen.dart' show CollectionTile;
+import 'home_screen.dart' show CollectionTile, kCollectionTileAspect;
 import '../theme.dart';
 import '../services/drive_urls.dart';
 import '../services/photo_freshness.dart';
@@ -130,7 +130,7 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
                     maxCrossAxisExtent: 240,
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
-                    childAspectRatio: 0.70,
+                    childAspectRatio: kCollectionTileAspect,
                   ),
                   itemCount: contents.subFolders.length,
                   // Sappan: the same full-bleed collection tile as the home.
@@ -296,7 +296,7 @@ class _FolderScaffold extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontFamily: 'Playfair', fontSize: 17, fontWeight: FontWeight.w700, letterSpacing: 2.2, color: kMaroon));
+                  fontFamily: kSerif, fontSize: 19.5, fontWeight: FontWeight.w700, letterSpacing: 2.2, color: kMaroon, fontFeatures: [FontFeature.liningFigures()]));
         }),
         centerTitle: true,
         actions: [
@@ -475,8 +475,8 @@ class _SubfolderTile extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontFamily: 'Playfair',
-                        fontSize: 17,
+                        fontFamily: kSerif,
+                        fontSize: 19.5,
                         fontWeight: FontWeight.w700,
                         height: 1.15,
                         fontFeatures: [FontFeature.liningFigures()]),
