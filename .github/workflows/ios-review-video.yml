@@ -35,6 +35,17 @@ jobs:
           flutter pub get
           flutter precache --ios
 
+      - name: Set up Ruby + gems (cocoapods)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+          working-directory: app/ios
+
+      - name: Install pods
+        working-directory: app/ios
+        run: bundle exec pod install --repo-update
+
       - name: Boot an iPhone simulator
         id: sim
         run: |
