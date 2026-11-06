@@ -33,8 +33,8 @@ class HelpButton extends StatelessWidget {
 
   static Future<void> show(BuildContext context, {String? designNumber}) {
     final msg = designNumber == null
-        ? t('Hello, I need help with the Sappan Sarees app.',
-            'नमस्ते, मुझे Sappan Sarees ऐप में मदद चाहिए।')
+        ? t('Hello, I need help with the Samppan Sarees app.',
+            'नमस्ते, मुझे Samppan Sarees ऐप में मदद चाहिए।')
         : t('Hello, I need help with design $designNumber.',
             'नमस्ते, मुझे डिज़ाइन $designNumber के बारे में मदद चाहिए।');
     return showModalBottomSheet<void>(

@@ -156,7 +156,7 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
       context: context,
       builder: (c) => AlertDialog(
         title: const Text('Delete your account?'),
-        content: const Text('Your Sappan Sarees account and your details (name, mobile, address) will be deleted. '
+        content: const Text('Your Samppan Sarees account and your details (name, mobile, address) will be deleted. '
             'Orders already placed stay with us for billing. You can sign up again any time.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
@@ -388,7 +388,7 @@ class _Steps extends StatelessWidget {
   }
 
   static const _keys = ['received', 'getting_ready', 'bill_sent', 'payment_received', 'dispatched', 'bilty'];
-  // Sappan retail wording.
+  // Samppan retail wording.
   static const _names = ['Order received', 'Being prepared', 'Payment requested', 'Payment received', 'Dispatched', 'Tracking details sent'];
 
   @override

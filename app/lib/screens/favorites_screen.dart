@@ -38,7 +38,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       if (pk != null && !pk.isEmpty) {
         return (price: p.price, qty: pk.minTotal(count), sure: pk.exact(count));
       }
-      final n = marks[p.id] ?? 1; // Sappan retail: 1 saree by default
+      final n = marks[p.id] ?? 1; // Samppan retail: 1 saree by default
       return (price: p.price, qty: n ?? 1, sure: n != null);
     }));
     final parcel = OrderService.activeParcel(ref.read(sharedPreferencesProvider),
@@ -188,7 +188,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      // Sappan: a boutique header — SHOPPING BAG, with orders / empty as icons.
+      // Samppan: a boutique header — SHOPPING BAG, with orders / empty as icons.
       appBar: AppBar(
         centerTitle: true,
         title: Text('SHOPPING BAG${favPhotos.isEmpty ? '' : ' · ${favPhotos.length}'}',
@@ -264,7 +264,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                             sure: pk.exact(count)
                           );
                         }
-                        final n = marks[p.id] ?? 1; // Sappan retail: 1 saree by default
+                        final n = marks[p.id] ?? 1; // Samppan retail: 1 saree by default
                         return (price: p.price, qty: n ?? 1, sure: n != null);
                       }));
                       return Padding(
@@ -305,7 +305,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                             ),
                           ),
                         ),
-                        // Sappan: no Share — the bag only places the order.
+                        // Samppan: no Share — the bag only places the order.
                       ],
                     ),
                   ],

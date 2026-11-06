@@ -20,7 +20,7 @@ import '../widgets/loading_collage.dart';
 import '../widgets/label_crop.dart';
 import '../widgets/shimmer.dart';
 
-/// SAPPAN SAREES home — a fashion-house storefront (owner 25-Oct-2026: "like
+/// SAMPPAN SAREES home — a fashion-house storefront (owner 25-Oct-2026: "like
 /// Gucci / Armani, nobody may tell it is the B.B Synthetics app"): centred
 /// tracked wordmark, full-bleed editorial hero, New In rail, full-bleed
 /// collection tiles, the weaves of India, the house promises, and a bottom
@@ -105,13 +105,13 @@ class _Wordmark extends StatelessWidget {
   const _Wordmark();
   @override
   Widget build(BuildContext context) {
-    // "SAPPAN" in couture serif; SAREES set small between gold rules.
+    // "SAMPPAN" in couture serif; SAREES set small between gold rules.
     Widget rule() => Container(width: 16, height: 0.8, color: kGold);
     return Column(mainAxisSize: MainAxisSize.min, children: [
       const Padding(
         // trailing tracking would push the word off-centre
         padding: EdgeInsets.only(left: 10),
-        child: Text('SAPPAN',
+        child: Text('SAMPPAN',
             style: TextStyle(
                 fontFamily: kSerif, fontSize: 31, fontWeight: FontWeight.w600, letterSpacing: 10, height: 1.0, color: kMaroon)),
       ),
@@ -481,7 +481,7 @@ class _WeavesBand extends StatelessWidget {
             style: TextStyle(fontFamily: kSerif, fontSize: 31, fontWeight: FontWeight.w700, color: kMaroon, height: 1.15, fontFeatures: [FontFeature.liningFigures()])),
         SizedBox(height: 10),
         Text(
-          'Every Sappan saree carries hours of craft — zari woven into the pallu, embroidery on every '
+          'Every Samppan saree carries hours of craft — zari woven into the pallu, embroidery on every '
           'inch, crystals set one by one. These are the arts our collection is made of.',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14, height: 1.6, color: kInk),
@@ -538,7 +538,7 @@ class _Footer extends StatelessWidget {
         const SizedBox(height: 26),
         const _Wordmark(),
         const SizedBox(height: 10),
-        const Text('© 2026 SAPPAN SAREES · INDIA',
+        const Text('© 2026 SAMPPAN SAREES · INDIA',
             style: TextStyle(fontSize: 9.5, letterSpacing: 2.4, color: Color(0xFF8A7B70))),
       ]),
     );

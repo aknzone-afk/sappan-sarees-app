@@ -54,7 +54,7 @@ class PhotoGrid extends ConsumerWidget {
           maxCrossAxisExtent: 200,
           mainAxisSpacing: 14,
           crossAxisSpacing: 10,
-          childAspectRatio: 0.66, // Sappan: photo + CHOOSE COLOUR
+          childAspectRatio: 0.66, // Samppan: photo + CHOOSE COLOUR
         ),
         itemCount: photos.length,
         itemBuilder: (context, i) {

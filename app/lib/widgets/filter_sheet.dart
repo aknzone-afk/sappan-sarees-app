@@ -135,7 +135,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
               ),
               const SizedBox(height: 12),
 
-              // Sappan: price range + sort only (no categories).
+              // Samppan: price range + sort only (no categories).
               // ---------- Price range ----------
               UText('Price range',
                   style: Theme.of(context).textTheme.titleSmall),

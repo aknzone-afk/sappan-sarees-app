@@ -31,7 +31,7 @@ const int kOcrBatchSize = 128;
 const int kDetailImageWidth = 2000;
 
 /// App branding.
-const String kAppTitle = 'SAPPAN SAREES';
+const String kAppTitle = 'SAMPPAN SAREES';
 const String kBrandSubtitle = 'THE FINEST WEAVES OF INDIA';
 
 /// Default WhatsApp number for the "Contact us" CTA (international format,
@@ -131,7 +131,7 @@ const String kAppConfigUrl = '$kDataBase/app/app-config.json';
 /// owner can change the minimum without an app update); 30,000 until then.
 int kMinOrderValue = 0;
 
-/// ---- Sappan Sarees RETAIL rules (owner 25-Oct-2026) ----
+/// ---- Samppan Sarees RETAIL rules (owner 25-Oct-2026) ----
 /// Retail price = wholesale price × this, everywhere (list, photo, cart, order).
 const int kRetailMultiplier = 2;
 
@@ -142,7 +142,7 @@ const int kRetailMinWholesale = 400;
 /// No minimum order — even one saree can be ordered.
 const bool kNoMinimumOrder = true;
 
-/// Header for Sappan's own cloud functions (codebase "sappan").
+/// Header for Samppan's own cloud functions (codebase "sappan").
 const String kSappanAppKey = 'sappan-retail-app-2026';
 
 /// True when [wholesale] may be shown / sold in the retail app.

@@ -123,7 +123,7 @@ class _LoadingCollageState extends ConsumerState<LoadingCollage>
       pct = (progress.foldersDone / totals.folders * 0.40).clamp(0.0, 0.40);
     }
 
-    // Sappan (owner 26-Oct-2026): a couture splash of its own — deep wine
+    // Samppan (owner 26-Oct-2026): a couture splash of its own — deep wine
     // silk, the monogram, a fine gold progress line. No floating photo cards.
     final phaseText = switch (progress.phase) {
       ScrapePhase.pricing => 'CURATING THE COLLECTION',
@@ -154,7 +154,7 @@ class _LoadingCollageState extends ConsumerState<LoadingCollage>
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               ClipOval(child: Image.asset('assets/icon/sappan_mark.png', width: 132, height: 132)),
               const SizedBox(height: 30),
-              const Text('SAPPAN',
+              const Text('SAMPPAN',
                   style: TextStyle(
                       fontFamily: kSerif, fontSize: 39.1, fontWeight: FontWeight.w700, letterSpacing: 12, color: Color(0xFFFFFCF7), fontFeatures: [FontFeature.liningFigures()])),
               const SizedBox(height: 8),
@@ -404,7 +404,7 @@ class _GlassPanel extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 320),
           padding: const EdgeInsets.fromLTRB(28, 26, 28, 26),
           decoration: BoxDecoration(
-            // Sappan: a wine-velvet card with a gold edge.
+            // Samppan: a wine-velvet card with a gold edge.
             color: const Color(0xF23F0614),
             borderRadius: BorderRadius.circular(4),
             border: Border.all(color: const Color(0xFFC6A15B), width: 0.8),
@@ -463,7 +463,7 @@ class _GlassPanel extends StatelessWidget {
               const Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'SAPPAN'),
+                    TextSpan(text: 'SAMPPAN'),
                     WidgetSpan(
                       alignment: PlaceholderAlignment.top,
                       child: Padding(

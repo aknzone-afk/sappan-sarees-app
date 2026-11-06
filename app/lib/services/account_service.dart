@@ -141,7 +141,7 @@ class AccountService {
     }
   }
 
-  /// Sappan retail sign-up: no code, no approval — the shop is just told.
+  /// Samppan retail sign-up: no code, no approval — the shop is just told.
   static Future<Map<String, dynamic>?> retailSignup(String mobile, Map<String, dynamic> cust) =>
       _post('accountSignup', {'mobile': mobile, 'cust': cust}, secs: 15);
 

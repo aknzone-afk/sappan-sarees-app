@@ -84,7 +84,7 @@ class _MarkupScreenState extends ConsumerState<MarkupScreen> {
       );
       final version = normalizeEtag(res.headers.value('etag'));
       if (version != null) _baseVersions[photo.id] = version;
-      // Sappan: drawn-on photos keep the RETAIL price.
+      // Samppan: drawn-on photos keep the RETAIL price.
       return await RetailPhotoFileService.repaint(Uint8List.fromList(res.data ?? const []), 'mk_${photo.id}');
     } catch (_) {
       return null;

@@ -89,7 +89,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
   @override
   void initState() {
     super.initState();
-    // Sappan retail: one simple form (name, mobile, address, pincode) filled
+    // Samppan retail: one simple form (name, mobile, address, pincode) filled
     // from the sign-up / last order — no old-party search, GST or transport.
     _newForm = true;
     _country = 'India';
@@ -389,7 +389,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     final pk = ref.read(picksProvider)[p.id];
     // Tap-select wins over marks / photo count; sets are never dropped.
     if (pk != null && !pk.isEmpty) return pk.minTotal(count);
-    // Sappan retail: one saree unless the customer chose colours / pieces.
+    // Samppan retail: one saree unless the customer chose colours / pieces.
     return ref.read(marksProvider)[p.id] ?? 1;
   }
 
@@ -709,7 +709,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
       );
       if (again != true || !mounted) return;
     }
-    _lockNote = null; // Sappan retail: no phone lock / Tally party checks
+    _lockNote = null; // Samppan retail: no phone lock / Tally party checks
     setState(() => _sending = true);
     final step = ValueNotifier<String>('Preparing…');
     // ignore: unawaited_futures

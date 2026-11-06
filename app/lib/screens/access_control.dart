@@ -89,7 +89,7 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
   /// lose the customer's place, and make them wait on two sheet downloads.
   /// Owner 13-Oct: an app older than app-config.json's min_build must update
   /// (works even with the customer sheet switched off). Offline = let in.
-  // Sappan: no forced update yet (the shop app's min_build is not ours).
+  // Samppan: no forced update yet (the shop app's min_build is not ours).
   static Future<bool> _belowMinBuild() async => false;
 
   /// Owner 14-Oct: customer onboarding. Null = an approved account (go on to
@@ -308,7 +308,7 @@ class _GateWordmark extends StatelessWidget {
     return Column(
       children: [
         const UText(
-          'Sappan Sarees',
+          'Samppan Sarees',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: kSerif,
@@ -636,7 +636,7 @@ class RemovedScreen extends StatelessWidget {
       icon: Icons.lock_outline_rounded,
       title: 'Access not available',
       message:
-          'Your access is currently not available. Please contact Sappan Sarees for details.',
+          'Your access is currently not available. Please contact Samppan Sarees for details.',
       actions: [
         OutlinedButton(onPressed: onRetry, child: const UText('Try again')),
       ],
@@ -696,7 +696,7 @@ class DeviceConflictScreen extends StatelessWidget {
       title: 'Active on another device',
       message:
           'This number is already in use on the maximum number of devices. '
-          'Please contact Sappan Sarees to transfer your access to this device.',
+          'Please contact Samppan Sarees to transfer your access to this device.',
       actions: [
         FilledButton.icon(
           onPressed: _requestTransfer,

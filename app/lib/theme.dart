@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// SAPPAN SAREES couture theme (owner 25-Oct-2026: "super premium, luxury
+/// SAMPPAN SAREES couture theme (owner 25-Oct-2026: "super premium, luxury
 /// from every angle"; redesign 27-Oct with the ui-ux-pro-max "luxury fashion"
 /// system): warm ivory paper, deep wine-maroon as the house colour, champagne
 /// gold used sparingly as hairlines and eyebrows, Cormorant Garamond display

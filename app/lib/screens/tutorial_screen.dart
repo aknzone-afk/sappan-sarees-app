@@ -72,7 +72,7 @@ class Tutorial {
   }
 
   static Future<void> refresh(SharedPreferences p, Dio dio) async {
-    // Sappan v1: B.B Synthetics' wholesale how-to video is not shown.
+    // Samppan v1: B.B Synthetics' wholesale how-to video is not shown.
     if (kNoMinimumOrder) return;
     try {
       final res = await dio.get<dynamic>(

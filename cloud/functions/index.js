@@ -124,11 +124,11 @@ async function orderGroup() {
   let best = null;
   snap.forEach((d) => {
     const t = String((d.data() || {}).title || "");
-    if (/sap+an|सपन|सप्पन|सापन/i.test(t) && (!best || (d.data().at || 0) > best.at)) best = { chat: d.id, title: t, at: d.data().at || 0 };
+    if (/sam?p+an|सपन|सप्पन|सापन|सम्पन/i.test(t) && (!best || (d.data().at || 0) > best.at)) best = { chat: d.id, title: t, at: d.data().at || 0 };
   });
   if (!best) return null;
   await db().collection("sappan_settings").doc("telegram").set({ chat: best.chat, title: best.title, at: Date.now(), auto: true });
-  await tg("sendMessage", { chat_id: best.chat, text: "✅ Connected — every SAPPAN SAREES app order and sign-up will come here." });
+  await tg("sendMessage", { chat_id: best.chat, text: "✅ Connected — every SAMPPAN SAREES app order and sign-up will come here." });
   return best.chat;
 }
 
@@ -151,7 +151,7 @@ exports.spAccountSignup = endpoint(async (b) => {
     if (chat) {
       await tg("sendMessage", {
         chat_id: chat, parse_mode: "HTML", disable_web_page_preview: true,
-        text: `${old ? "🔁 Sign-up again" : "🆕 New sign-up"} — <b>SAPPAN SAREES app</b>\n👤 ${esc(cust.name)}\n📍 ${esc([cust.city, cust.state].filter(Boolean).join(", "))} ${esc(cust.pincode)}\n📱 +91 ${m} · <a href="https://wa.me/91${m}">WhatsApp</a>`,
+        text: `${old ? "🔁 Sign-up again" : "🆕 New sign-up"} — <b>SAMPPAN SAREES app</b>\n👤 ${esc(cust.name)}\n📍 ${esc([cust.city, cust.state].filter(Boolean).join(", "))} ${esc(cust.pincode)}\n📱 +91 ${m} · <a href="https://wa.me/91${m}">WhatsApp</a>`,
       });
     }
   } catch (e) { logger.warn("signup note", { error: e.message }); }
@@ -306,7 +306,7 @@ async function deliver(ref) {
       } catch (e) { /* the details still name the design */ }
     }
     const extra = await tgPhotos(chat, photos);
-    const text = o.dText || o.pText || `🛍️ <b>SAPPAN SAREES — RETAIL ORDER</b>\n📱 +91 ${o.mobile}`;
+    const text = o.dText || o.pText || `🛍️ <b>SAMPPAN SAREES — RETAIL ORDER</b>\n📱 +91 ${o.mobile}`;
     const d = await tg("sendMessage", { chat_id: chat, text: cut(text, 4000), parse_mode: "HTML", disable_web_page_preview: true });
     if (!d.ok) throw new Error("details: " + (d.description || "?"));
     const n = await tg("sendMessage", { chat_id: chat, text: `ORDER NO. ${o.serial}` });
@@ -392,13 +392,13 @@ exports.spShare = onRequest({ ...OPTS }, async (req, res) => {
   const img = `${SHARE_FN}/spShareImg?d=${encodeURIComponent(id)}`;
   const deep = `sappansarees://open/p/${encodeURIComponent(id)}`;
   const intent = `intent://open/p/${encodeURIComponent(id)}#Intent;scheme=sappansarees;package=com.sappansarees.retailapp;S.browser_fallback_url=${encodeURIComponent(PLAY_STORE)};end`;
-  const title = "Sappan Sarees" + (price ? " · " + price : "");
+  const title = "Samppan Sarees" + (price ? " · " + price : "");
   res.set("Cache-Control", "public, max-age=600");
   res.type("html").send(`<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="The finest weaves of India — tap to view this saree in the Sappan Sarees app.">
+<meta property="og:description" content="The finest weaves of India — tap to view this saree in the Samppan Sarees app.">
 <meta property="og:image" content="${img}">
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
@@ -413,12 +413,12 @@ exports.spShare = onRequest({ ...OPTS }, async (req, res) => {
  a.alt{background:transparent;color:#e9d9b4}
  .note{font:12px system-ui,sans-serif;color:#e9d9b4aa;margin-top:18px;line-height:1.5}
 </style></head><body><div class="wrap">
-<h1>SAPPAN</h1><div class="sub">THE FINEST WEAVES OF INDIA</div>
+<h1>SAMPPAN</h1><div class="sub">THE FINEST WEAVES OF INDIA</div>
 <img src="${img}" alt="Saree">
 ${price ? `<div class="price">${esc(price)}</div>` : ""}
 <a class="btn" id="open" href="${deep}">OPEN IN THE APP</a>
 <a class="btn alt" id="get" href="${IOS_STORE}">GET THE APP</a>
-<div class="note">New here? Install Sappan Sarees, sign up in 30 seconds, then tap this link again to open this saree.</div>
+<div class="note">New here? Install Samppan Sarees, sign up in 30 seconds, then tap this link again to open this saree.</div>
 </div><script>
  var ua=navigator.userAgent||"", android=/Android/i.test(ua), ios=/iPhone|iPad|iPod/i.test(ua);
  var get=document.getElementById("get"), open=document.getElementById("open");

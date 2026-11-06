@@ -111,7 +111,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final mob = ChatService.mobile(prefs);
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('CHAT WITH SAPPAN SAREES')),
+      appBar: AppBar(title: const Text('CHAT WITH SAMPPAN SAREES')),
       body: mob == null
           ? const Center(
               child: Padding(

@@ -931,7 +931,7 @@ Future<void> _prefetchAllThumbnails(Ref ref, Iterable<String> photoIds) async {
     // don't saturate the pipe and starve UI image loads the user actually
     // triggers via taps. Once this completes the full-screen viewer needs
     // zero network for any photo in the catalog.
-    // Sappan: full-size photos are repainted with the retail price, so they
+    // Samppan: full-size photos are repainted with the retail price, so they
     // are fetched only when a customer opens the design (not all in advance).
     if (!kNoMinimumOrder) {
       final details = ids
@@ -1097,7 +1097,7 @@ Future<void> _silentForegroundResync(Ref ref) {
 /// Flat photo list.
 final photosProvider = Provider<List<Photo>>((ref) {
   return ref.watch(catalogProvider).maybeWhen(
-        // Sappan retail: designs under ₹400 wholesale (or not yet priced)
+        // Samppan retail: designs under ₹400 wholesale (or not yet priced)
         // never appear anywhere in the app.
         data: (d) => [for (final p in d.photos) if (retailVisible(p.wholesalePrice)) p],
         orElse: () => const <Photo>[],

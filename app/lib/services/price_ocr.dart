@@ -75,7 +75,7 @@ class PriceOcr {
     if (kNoOnDeviceOcr) return null;
     try {
       final url = DriveUrls.thumbnail(driveFileId, width: width);
-      // Sappan: the RAW photo (wholesale price as printed), never the
+      // Samppan: the RAW photo (wholesale price as printed), never the
       // retail-repainted display copy.
       final info = await rawPhotoCacheManager
           .downloadFile(url)

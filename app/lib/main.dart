@@ -91,7 +91,7 @@ Future<void> main() async {
 
   // Real push (owner 11-Oct): the bill / a shop reply rings the phone; a tap
   // opens the chat. Non-fatal if Firebase is unavailable.
-  // Sappan v1: no push (B.B Synthetics' Firebase ids are not ours).
+  // Samppan v1: no push (B.B Synthetics' Firebase ids are not ours).
   // ignore: dead_code
   if (false) PushService.init((route) => WidgetsBinding.instance.addPostFrameCallback((_) =>
       // Owner 14-Oct: the 9 PM push opens the DAILY UPDATE folder.

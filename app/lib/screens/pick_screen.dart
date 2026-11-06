@@ -632,7 +632,7 @@ class _PickScreenState extends ConsumerState<PickScreen> {
                   iw = ih * a;
                 }
                 return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  // Sappan retail: no SET control — customers pick single pieces.
+                  // Samppan retail: no SET control — customers pick single pieces.
                   SizedBox(
                     width: iw,
                     height: ih,

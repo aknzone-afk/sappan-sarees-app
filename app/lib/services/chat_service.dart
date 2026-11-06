@@ -167,7 +167,7 @@ class ChatService {
     final fresh = msgs.where((m) => !m.mine && m.at > last && m.at > seen).toList();
     if (fresh.isEmpty) return;
     final m = fresh.last;
-    await show('SAPPAN SAREES', m.text.isNotEmpty ? m.text : '📎 You have a new file from SAPPAN SAREES');
+    await show('SAMPPAN SAREES', m.text.isNotEmpty ? m.text : '📎 You have a new file from SAMPPAN SAREES');
     await p.setInt(_kNotified, m.at);
   }
 

@@ -10,7 +10,7 @@ import 'retail_photo.dart';
 class _PhotoCacheManager extends CacheManager with ImageCacheManager {
   _PhotoCacheManager()
       : super(Config(
-          // Sappan: its own store — every file in it carries the RETAIL price
+          // Samppan: its own store — every file in it carries the RETAIL price
           // (see RetailPhotoFileService). 5000 cap like the shop app.
           'sappanRetailPhotos',
           maxNrOfCacheObjects: 5000,
@@ -22,7 +22,7 @@ class _PhotoCacheManager extends CacheManager with ImageCacheManager {
 /// printed on it). Never mix it with DefaultCacheManager().
 final CacheManager photoCacheManager = _PhotoCacheManager();
 
-/// Sappan: untouched originals, only for READING the printed (wholesale)
+/// Samppan: untouched originals, only for READING the printed (wholesale)
 /// price — so the stored price is never the already-doubled one.
 final CacheManager rawPhotoCacheManager = CacheManager(Config(
   'sappanRawPhotos',

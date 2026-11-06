@@ -19,7 +19,7 @@ const String _channelId = 'daily_update';
 const AndroidNotificationChannel _chatChannel = AndroidNotificationChannel(
   'chat',
   'Shop messages',
-  description: 'Order updates from Sappan Sarees',
+  description: 'Order updates from Samppan Sarees',
   importance: Importance.high,
 );
 
@@ -103,7 +103,7 @@ class NotificationService {
         android: AndroidNotificationDetails(
           'chat',
           'Shop messages',
-          channelDescription: 'Order updates from Sappan Sarees',
+          channelDescription: 'Order updates from Samppan Sarees',
           importance: Importance.high,
           priority: Priority.high,
         ),
@@ -143,7 +143,7 @@ class NotificationService {
     await _plugin.zonedSchedule(
       id: _dailyId,
       title: 'New designs this week! 🆕',
-      body: "Tap to see the latest updates from Sappan Sarees.",
+      body: "Tap to see the latest updates from Samppan Sarees.",
       scheduledDate: _nextSunday(_dailyHour, _dailyMinute),
       notificationDetails: _details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

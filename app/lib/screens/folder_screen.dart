@@ -133,7 +133,7 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
                     childAspectRatio: kCollectionTileAspect,
                   ),
                   itemCount: contents.subFolders.length,
-                  // Sappan: the same full-bleed collection tile as the home.
+                  // Samppan: the same full-bleed collection tile as the home.
                   itemBuilder: (context, i) =>
                       CollectionTile(folder: contents.subFolders[i]),
                 ),
@@ -147,7 +147,7 @@ class _FolderScreenState extends ConsumerState<FolderScreen> {
                     maxCrossAxisExtent: 200,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
-                    childAspectRatio: 0.66, // Sappan: photo + CHOOSE COLOUR
+                    childAspectRatio: 0.66, // Samppan: photo + CHOOSE COLOUR
                   ),
                   itemCount: filteredDirect.length,
                   itemBuilder: (context, i) => _GridTile(
@@ -290,7 +290,7 @@ class _FolderScaffold extends ConsumerWidget {
               ),
             ]);
           }
-          // Sappan: the collection's name, set like a fashion-house header.
+          // Samppan: the collection's name, set like a fashion-house header.
           return Text(retailText(title).toUpperCase(),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

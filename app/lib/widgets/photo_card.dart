@@ -128,7 +128,7 @@ class PhotoCard extends ConsumerWidget {
                 ),
               ),
             ),
-          // Sappan: the retail price as a frosted ivory tag on the photo
+          // Samppan: the retail price as a frosted ivory tag on the photo
           // (no design number shown on the card).
           if (pickSummary == null && price == PriceDisplay.show && photo.price != null)
             Positioned(

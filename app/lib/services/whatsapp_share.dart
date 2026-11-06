@@ -256,7 +256,7 @@ class WhatsAppShare {
       final fontSize = (w * 0.026).clamp(9.0, 26.0);
       final tp = TextPainter(
         text: TextSpan(
-          text: 'SAPPAN',
+          text: 'SAMPPAN',
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.20), // very subtle
             fontSize: fontSize,
@@ -337,7 +337,7 @@ class WhatsAppShare {
             options: Options(responseType: ResponseType.bytes),
           );
           bytes = Uint8List.fromList(res.data ?? const []);
-          // Sappan: shared photos show the RETAIL price (any markup below is
+          // Samppan: shared photos show the RETAIL price (any markup below is
           // then added on top of it).
           if (bytes.isNotEmpty) bytes = await RetailPhotoFileService.repaint(bytes, 'sh_${ph.id}');
         } catch (_) {

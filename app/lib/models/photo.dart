@@ -28,7 +28,7 @@ class Photo {
   /// (what the cache stores). Null until known.
   final int? wholesalePrice;
 
-  /// Sappan retail (owner 25-Oct-2026): every price shown, ordered or totalled
+  /// Samppan retail (owner 25-Oct-2026): every price shown, ordered or totalled
   /// is exactly DOUBLE the wholesale price.
   int? get price => wholesalePrice == null ? null : wholesalePrice! * kRetailMultiplier;
 

@@ -145,7 +145,7 @@ class OrderService {
   static const kMaxAddOns = 2;
   static ({String number, DateTime until, int? serial, int left})? activeParcel(
       SharedPreferences prefs, {String? mobile}) {
-    // Sappan retail: no add-on window / minimum — every order stands alone.
+    // Samppan retail: no add-on window / minimum — every order stands alone.
     if (kNoMinimumOrder) return null;
     final now = DateTime.now();
     final all = history(prefs);
@@ -202,7 +202,7 @@ class OrderService {
     }
     // Owner, 11-Oct-2026: STRICT — below ₹30,000 the order is never sent,
     // even if some design's price can't be read (it counts as ₹0).
-    // Sappan retail: no minimum at all — even one saree can be ordered.
+    // Samppan retail: no minimum at all — even one saree can be ordered.
     final below = !kNoMinimumOrder && known < kMinOrderValue;
     final progress = kMinOrderValue <= 0 ? 1.0 : (known / kMinOrderValue).clamp(0.0, 1.0).toDouble();
     return (known: known, unpriced: unpriced, below: below, progress: progress);
@@ -664,7 +664,7 @@ class OrderService {
               );
               final got = Uint8List.fromList(res.data ?? const []);
               if (got.isNotEmpty) {
-                // Sappan: the order photo shows the RETAIL price too.
+                // Samppan: the order photo shows the RETAIL price too.
                 bytes = await RetailPhotoFileService.repaint(got, 'ord_${ph.id}');
                 break;
               }
@@ -821,7 +821,7 @@ class OrderService {
   /// The shop's on/off switch (order-config `enabled`); true when unreadable
   /// and never cached, so an outage never blocks a send.
   static Future<bool> _enabled(SharedPreferences prefs, Dio dio) async {
-    if (kNoMinimumOrder) return true; // Sappan: always on
+    if (kNoMinimumOrder) return true; // Samppan: always on
     Map<String, dynamic>? cfg;
     try {
       final res = await dio.get<dynamic>(
@@ -1229,8 +1229,8 @@ class OrderService {
     // text stays in the order saved on the phone.
     if ((o.lockNote ?? '').isNotEmpty) b.writeln(_clipEsc(o.lockNote!, 400));
     if (c.kind == 'retail') {
-      // Sappan Sarees retail customer: name, address, pincode, mobile only.
-      b.writeln('🛍️ <b>SAPPAN SAREES — RETAIL ORDER</b>');
+      // Samppan Sarees retail customer: name, address, pincode, mobile only.
+      b.writeln('🛍️ <b>SAMPPAN SAREES — RETAIL ORDER</b>');
       b.writeln();
       b.writeln('👤 <b>Name:</b> ${_clipEsc(c.billName, 200)}');
       b.writeln('🏠 <b>Address:</b> ${_clipEsc(c.address, 600)}');

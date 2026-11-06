@@ -237,7 +237,7 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
           ],
         ),
         actions: [
-          // Sappan: share this saree — WhatsApp, copy link, … (opens the app
+          // Samppan: share this saree — WhatsApp, copy link, … (opens the app
           // on the saree, or the store when the app is not installed).
           IconButton(
             tooltip: 'Share',

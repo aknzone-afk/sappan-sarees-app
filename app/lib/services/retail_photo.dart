@@ -7,7 +7,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import '../config.dart';
 import 'price_markup.dart';
 
-/// Sappan retail (owner 25-Oct-2026): the shop's photos carry the WHOLESALE
+/// Samppan retail (owner 25-Oct-2026): the shop's photos carry the WHOLESALE
 /// price printed in a white "Rs 545/-" box. Every photo this app SHOWS is
 /// downloaded through [RetailPhotoFileService], which erases that price and
 /// prints "Rs <price × kRetailMultiplier>/-" in its place (the same proven

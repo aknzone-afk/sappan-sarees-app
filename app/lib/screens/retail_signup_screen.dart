@@ -13,7 +13,7 @@ import '../services/order_service.dart';
 import '../theme.dart';
 
 /// ============================================================
-/// SAPPAN SAREES SIGN-UP (owner 25-Oct-2026) — retail customers.
+/// SAMPPAN SAREES SIGN-UP (owner 25-Oct-2026) — retail customers.
 /// Name, mobile, address, pincode → straight into the catalogue.
 /// No WhatsApp code, no approval, no GST / ID / business proof, no
 /// transport. The same number signing up again simply updates its details.
@@ -156,7 +156,7 @@ class _RetailSignupScreenState extends State<RetailSignupScreen> {
                     Center(child: ClipOval(child: Image.asset('assets/icon/sappan_mark.png', width: 104, height: 104))),
                     const SizedBox(height: 14),
                     const UText(
-                      'Sappan Sarees',
+                      'Samppan Sarees',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: kSerif,

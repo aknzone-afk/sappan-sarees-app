@@ -91,7 +91,7 @@ class _Wordmark extends StatelessWidget {
   const _Wordmark();
   @override
   Widget build(BuildContext context) => const UText(
-        'Sappan Sarees',
+        'Samppan Sarees',
         textAlign: TextAlign.center,
         style: TextStyle(
             fontFamily: kSerif,
@@ -151,8 +151,8 @@ class AccountRemovedScreen extends StatelessWidget {
       const SizedBox(height: 10),
       Text(
         declined
-            ? 'Your account was not approved. Please contact Sappan Sarees.'
-            : 'Your access to the Sappan Sarees catalog has been removed. Please contact Sappan Sarees.',
+            ? 'Your account was not approved. Please contact Samppan Sarees.'
+            : 'Your access to the Samppan Sarees catalog has been removed. Please contact Samppan Sarees.',
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 15, height: 1.5),
       ),
@@ -802,7 +802,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> with WidgetsBindingObse
     return _Page(children: [
       const _Wordmark(),
       const SizedBox(height: 26),
-      const Text('Welcome to Sappan Sarees',
+      const Text('Welcome to Samppan Sarees',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: _dark)),
       const SizedBox(height: 8),
@@ -1046,7 +1046,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> with WidgetsBindingObse
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: _dark)),
                         const SizedBox(height: 10),
                         const Text(
-                          'Thank you! Sappan Sarees is checking your details. We will notify you as soon '
+                          'Thank you! Samppan Sarees is checking your details. We will notify you as soon '
                           'as your account is approved — the catalog then opens by itself.',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 15, height: 1.5),
@@ -1832,7 +1832,7 @@ class _SignupFormState extends State<_SignupForm> {
                 Text('✓ Verified: ${widget.mobileLabel}',
                     style: const TextStyle(color: _green, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              const Text('New customer — please fill your details. Sappan Sarees will approve your account.',
+              const Text('New customer — please fill your details. Samppan Sarees will approve your account.',
                   style: TextStyle(fontSize: 14, height: 1.4)),
               const SizedBox(height: 10),
               // Owner 15-Oct: help video — how to fill the details.

@@ -26,14 +26,14 @@ class CatalogFolder {
   String get displayName {
     if (path.isEmpty) return 'Catalog';
     final i = path.lastIndexOf('/');
-    // Sappan: wholesale price bands in folder names shown at retail.
+    // Samppan: wholesale price bands in folder names shown at retail.
     return displayFolderName(i == -1 ? path : path.substring(i + 1));
   }
 
   int get depth => path.isEmpty ? 0 : path.split('/').length;
 }
 
-/// Sappan display name of a folder (last segment of [path]): the shop's
+/// Samppan display name of a folder (last segment of [path]): the shop's
 /// DAILY UPDATE folder reads as New Arrivals; rupee bands shown at retail.
 String displayFolderName(String path) {
   final i = path.lastIndexOf('/');

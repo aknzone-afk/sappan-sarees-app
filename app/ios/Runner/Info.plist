@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Sappan Sarees</string>
+	<string>Samppan Sarees</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -71,15 +71,15 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Save saree photos you like to your gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Choose a photo to share with Sappan Sarees (for example a saree you are looking for).</string>
+	<string>Choose a photo to share with Samppan Sarees (for example a saree you are looking for).</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Used only if you choose to record a video message for Sappan Sarees.</string>
+	<string>Used only if you choose to record a video message for Samppan Sarees.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Used only if you choose to share your delivery location. Never in the background. You can say no and still continue.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used only if you choose to share your delivery location. You can say no and still continue.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Take a photo to share with Sappan Sarees (for example a saree you are looking for).</string>
+	<string>Take a photo to share with Samppan Sarees (for example a saree you are looking for).</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

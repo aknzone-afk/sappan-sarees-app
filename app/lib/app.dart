@@ -78,7 +78,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(path: '/orders', builder: (_, __) => const MyOrdersScreen()),
     // Owner 15-Oct: DAILY UPDATE history (one bubble per day).
-    // Sappan: plain newest-first gallery; the day-by-day feed is not used.
+    // Samppan: plain newest-first gallery; the day-by-day feed is not used.
     GoRoute(path: '/new', builder: (_, __) => const NewInScreen()),
     GoRoute(path: '/daily', redirect: (_, __) => '/new'),
     GoRoute(
@@ -98,7 +98,7 @@ final appRouter = GoRouter(
       builder: (_, s) =>
           FolderLinkScreen(name: Uri.decodeComponent(s.pathParameters['name']!)),
     ),
-    // Sappan share links: sappansarees://open/p/<photo id> → that saree.
+    // Samppan share links: sappansarees://open/p/<photo id> → that saree.
     GoRoute(
       path: '/p/:id',
       builder: (_, s) {

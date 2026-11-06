@@ -77,7 +77,7 @@ class _DesignLinkScreenState extends ConsumerState<DesignLinkScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const UText('SAPPAN SAREES')),
+      appBar: AppBar(title: const UText('SAMPPAN SAREES')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(28),

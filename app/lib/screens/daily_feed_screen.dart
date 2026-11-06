@@ -74,7 +74,7 @@ List<DailyDay> _parse(String body) {
       DailyDay('${d['d']}', [
         for (final it in (d['items'] as List? ?? const []))
           if (it is Map<String, dynamic> && '${it['i'] ?? ''}'.isNotEmpty) DailyItem.fromJson(it),
-      ].where((it) => retailVisible(it.price)).toList()), // Sappan: ≥ ₹400 only
+      ].where((it) => retailVisible(it.price)).toList()), // Samppan: ≥ ₹400 only
   ].where((d) => d.items.isNotEmpty).toList();
 }
 
@@ -212,7 +212,7 @@ class _DayBubble extends StatelessWidget {
           ),
         ),
         Material(
-          // Sappan: an ivory card with a gold edge (no chat bubble).
+          // Samppan: an ivory card with a gold edge (no chat bubble).
           color: const Color(0xFFFFFCF7),
           shape: const RoundedRectangleBorder(side: BorderSide(color: Color(0xFFC6A15B), width: 0.8)),
           child: InkWell(
