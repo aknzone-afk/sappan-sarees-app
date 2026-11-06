@@ -90,8 +90,11 @@ void main() {
       await idle(2.5); // let the viewer read the tip
       await tapIt(find.text('OK, start'), after: 2);
     }
-    final size = tester.view.physicalSize / tester.view.devicePixelRatio;
-    await tester.tapAt(Offset(size.width / 2, size.height * 0.5));
+    // Tap the middle of the saree photo itself (the picker's tap area).
+    final photoArea = find.byWidgetPredicate((w) => w is GestureDetector && w.onTapUp != null);
+    if (await waitFor(photoArea, secs: 10)) {
+      await tester.tapAt(tester.getCenter(photoArea.first));
+    }
     await idle(3);
     await tapIt(find.text('DONE'), after: 3);
 
