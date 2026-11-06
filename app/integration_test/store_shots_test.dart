@@ -58,18 +58,18 @@ void main() {
     await binding.convertFlutterSurfaceToImage();
 
     // first launch: live catalogue, covers, then the on-photo prices
-    await waitFor(find.text('NEW IN'), secs: 120);
-    await wait(60);
+    await waitFor(find.text('NEW IN'), secs: 180);
+    await wait(240); // photos download + price repaint on a GPU-less emulator
 
     appRouter.go('/');
-    await shot('01_home', settle: 10);
+    await shot('01_home', settle: 30);
 
     final scroll = find.byType(Scrollable).first;
     await t.drag(scroll, const Offset(0, -900));
-    await shot('02_collections', settle: 8);
+    await shot('02_collections', settle: 45);
 
     appRouter.push('/new');
-    await shot('03_new_in', settle: 25);
+    await shot('03_new_in', settle: 90);
 
     // a design that has a modelling photo
     final container = ProviderScope.containerOf(t.element(find.byType(Navigator).first));
@@ -82,7 +82,7 @@ void main() {
     final pick = withModel.isNotEmpty ? withModel.first : photos.first;
 
     appRouter.push('/pick/${Uri.encodeComponent(pick.id)}');
-    await wait(4);
+    await wait(30);
     if (await waitFor(find.text('OK, start'), secs: 8)) {
       await t.tap(find.text('OK, start'), warnIfMissed: false);
       await wait(2);
@@ -108,5 +108,5 @@ void main() {
 
     appRouter.push('/order');
     await shot('07_order', settle: 6);
-  }, timeout: const Timeout(Duration(minutes: 20)));
+  }, timeout: const Timeout(Duration(minutes: 40)));
 }
