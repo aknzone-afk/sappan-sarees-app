@@ -7,11 +7,13 @@ import 'package:catalog_app/app.dart' show appRouter;
 import 'package:catalog_app/main.dart' as app;
 import 'package:catalog_app/models/photo.dart';
 import 'package:catalog_app/providers/providers.dart';
+import 'package:catalog_app/services/account_service.dart';
 import 'package:catalog_app/services/model_pics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -33,34 +35,27 @@ void main() {
       return false;
     }
 
-    Future<void> type(String label, String text) async {
-      final f = find.widgetWithText(TextFormField, label);
-      if (!await waitFor(f)) return;
-      await t.ensureVisible(f);
-      await t.enterText(f, text);
-      await wait(0.6);
-    }
-
     Future<void> shot(String name, {double settle = 6}) async {
       await wait(settle);
       await binding.takeScreenshot(name);
     }
 
+    // a signed-up customer (stored the way the sign-up screen stores it — no
+    // fake sign-up is sent to the shop)
+    final prefs = await SharedPreferences.getInstance();
+    await AccountService.approve(prefs, {
+      'mobile': '9876543210',
+      'india': true,
+      'kind': 'retail',
+      'cust': {
+        'name': 'Ananya Sharma', 'billName': 'Ananya Sharma',
+        'address': '12 MG Road, Indiranagar, Bengaluru', 'pincode': '560038',
+        'city': 'Bengaluru', 'state': 'Karnataka', 'country': 'India',
+      },
+    });
     app.main();
     await wait(3);
     await binding.convertFlutterSurfaceToImage();
-
-    // sign up like a customer
-    await waitFor(find.text('START SHOPPING'), secs: 60);
-    await type('Your Name *', 'Ananya Sharma');
-    await type('Mobile No. *', '9876543210');
-    await type('Full Address *', '12 MG Road, Indiranagar, Bengaluru');
-    await type('Pincode *', '560038');
-    FocusManager.instance.primaryFocus?.unfocus();
-    await wait(3);
-    final start = find.text('START SHOPPING');
-    await t.ensureVisible(start);
-    await t.tap(start, warnIfMissed: false);
 
     // first launch: live catalogue, covers, then the on-photo prices
     await waitFor(find.text('NEW IN'), secs: 120);
