@@ -9,6 +9,7 @@ import 'package:catalog_app/models/photo.dart';
 import 'package:catalog_app/providers/providers.dart';
 import 'package:catalog_app/services/account_service.dart';
 import 'package:catalog_app/services/model_pics.dart';
+import 'package:catalog_app/widgets/model_pic.dart' show fetchModelPic;
 import 'package:catalog_app/services/photo_freshness.dart' show photoCacheManager;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -104,15 +105,24 @@ void main() {
       await t.tap(find.text('OK, start'), warnIfMissed: false);
       await wait(2);
     }
-    final area = find.byWidgetPredicate((w) => w is GestureDetector && w.onTapUp != null);
-    if (await waitFor(area, secs: 10)) {
-      await t.tapAt(t.getCenter(area.first));
+    // tap the saree on the photo (the photo sits under the "TAP A SAREE" bar)
+    final bar = find.text('TAP A SAREE TO SELECT IT');
+    if (await waitFor(bar, secs: 10)) {
+      final b = t.getRect(bar);
+      await t.tapAt(Offset(b.center.dx, b.bottom + 110));
+      await wait(1.5);
     }
     await shot('04_choose_colour', settle: 4);
 
+    final mp = modelPicsOf(models, pick.designNumber);
+    if (mp.isNotEmpty) {
+      try {
+        await fetchModelPic(mp.first, attempts: 3).timeout(const Duration(seconds: 60));
+      } catch (_) {}
+    }
     if (await waitFor(find.text('VIEW ON MODEL'), secs: 5)) {
       await t.tap(find.text('VIEW ON MODEL'), warnIfMissed: false);
-      await shot('05_on_model', settle: 1.4);
+      await shot('05_on_model', settle: 1.2);
       await wait(3);
     }
     if (await waitFor(find.text('DONE'), secs: 5)) {
@@ -120,6 +130,10 @@ void main() {
       await wait(2);
     }
 
+    // make sure the bag holds this saree (1 piece) even if the tap missed
+    if (container.read(favoritesProvider).isEmpty) {
+      await container.read(favoritesProvider.notifier).add(pick.id);
+    }
     appRouter.go('/favorites');
     await shot('06_bag', settle: 8);
 
