@@ -9,6 +9,7 @@ import 'package:catalog_app/models/photo.dart';
 import 'package:catalog_app/providers/providers.dart';
 import 'package:catalog_app/services/account_service.dart';
 import 'package:catalog_app/services/model_pics.dart';
+import 'package:catalog_app/services/photo_freshness.dart' show photoCacheManager;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -61,12 +62,26 @@ void main() {
     await waitFor(find.text('NEW IN'), secs: 180);
     await wait(240); // photos download + price repaint on a GPU-less emulator
 
+    // Fetch (and price-repaint) exactly what the screens show, and wait for
+    // each one — a GPU-less emulator is slow, a blank tile is no screenshot.
+    final container0 = ProviderScope.containerOf(t.element(find.byType(Navigator).first));
+    final newest = [...container0.read(photosProvider)]..sort(Photo.compareNewestFirst);
+    Future<void> warm(String url) async {
+      try {
+        await photoCacheManager.downloadFile(url).timeout(const Duration(seconds: 90));
+      } catch (_) {}
+      await t.pump(const Duration(milliseconds: 50));
+    }
+    for (final p in newest.take(16)) {
+      await warm(p.thumbUrl());
+    }
+
     appRouter.go('/');
     await shot('01_home', settle: 30);
 
     final scroll = find.byType(Scrollable).first;
     await t.drag(scroll, const Offset(0, -900));
-    await shot('02_collections', settle: 45);
+    await shot('02_collections', settle: 120);
 
     appRouter.push('/new');
     await shot('03_new_in', settle: 90);
@@ -81,6 +96,8 @@ void main() {
     final withModel = photos.where((p) => modelPicsOf(models, p.designNumber).isNotEmpty).toList();
     final pick = withModel.isNotEmpty ? withModel.first : photos.first;
 
+    await warm(pick.thumbUrl());
+    await warm(pick.detailUrl());
     appRouter.push('/pick/${Uri.encodeComponent(pick.id)}');
     await wait(30);
     if (await waitFor(find.text('OK, start'), secs: 8)) {
