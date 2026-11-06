@@ -65,7 +65,7 @@ jobs:
 
       - name: Build the app for the simulator first (keeps the recording short)
         working-directory: app
-        run: flutter build ios --simulator --debug --no-codesign
+        run: flutter build ios --simulator --debug --no-codesign --dart-define=NO_ONDEVICE_OCR=true
 
       - name: Record the review flow
         working-directory: app
@@ -75,7 +75,7 @@ jobs:
           xcrun simctl io "$UDID" recordVideo --codec=h264 --force ../out/sappan_review_flow.mp4 &
           REC=$!
           sleep 2
-          flutter test integration_test/review_flow_test.dart -d "$UDID" 2>&1 | tee ../out/test.log || true
+          flutter test integration_test/review_flow_test.dart -d "$UDID" --dart-define=NO_ONDEVICE_OCR=true 2>&1 | tee ../out/test.log || true
           sleep 2
           kill -INT $REC
           wait $REC || true

@@ -339,7 +339,10 @@ final FutureProvider<CatalogResult> catalogProvider =
   // After scrape completes, prefetch the folder covers so the home grid
   // renders with photos painted.
   if (!result.fromCache) {
-    await _prefetchTopLevelCovers(ref, result);
+    // Same ceiling as the first-launch path — a cover that never finishes
+    // (slow network, photo service stuck) must not hold the loading screen.
+    await _prefetchTopLevelCovers(ref, result)
+        .timeout(const Duration(seconds: 40), onTimeout: () {});
     // Prices are read quietly AFTER the catalog opens (12-Oct: blocking the
     // loading screen with it crashed iPhones on the first load).
     // ignore: discarded_futures

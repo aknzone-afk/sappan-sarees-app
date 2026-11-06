@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'price_markup.dart' show kNoOnDeviceOcr;
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../config.dart';
@@ -71,6 +72,7 @@ class PriceOcr {
   /// Null if the download or OCR failed.
   Future<({String text, int? price, String? priceText, String? version})?>
       _readAt(String driveFileId, int width) async {
+    if (kNoOnDeviceOcr) return null;
     try {
       final url = DriveUrls.thumbnail(driveFileId, width: width);
       // Sappan: the RAW photo (wholesale price as printed), never the
@@ -79,7 +81,8 @@ class PriceOcr {
           .downloadFile(url)
           .timeout(const Duration(seconds: 60));
       final result = await _recognizer
-          .processImage(InputImage.fromFilePath(info.file.path));
+          .processImage(InputImage.fromFilePath(info.file.path))
+          .timeout(const Duration(seconds: 45));
       final parsed = parsePrice(result.text);
       final version = await cachedImageVersion(url, manager: rawPhotoCacheManager);
       return (

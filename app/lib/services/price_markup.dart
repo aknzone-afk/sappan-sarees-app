@@ -21,6 +21,11 @@ import 'package:path_provider/path_provider.dart';
 ///
 /// Result: every photo shows the marked-up price in the identical "Rs X/-"
 /// style, with the original value fully erased (no ghost digits).
+/// Test-only switch (App Review screen recording on the iOS simulator, where
+/// ML Kit is unavailable): `--dart-define=NO_ONDEVICE_OCR=true`. Store builds
+/// never set it.
+const bool kNoOnDeviceOcr = bool.fromEnvironment('NO_ONDEVICE_OCR');
+
 class PriceMarkup {
   final TextRecognizer _recognizer =
       TextRecognizer(script: TextRecognitionScript.latin);
@@ -36,14 +41,18 @@ class PriceMarkup {
     double gstPercent = 0,
     bool roundTo5 = true,
   }) async {
-    if ((overridePrice == null && percent <= 0) || imageBytes.isEmpty) {
+    if ((overridePrice == null && percent <= 0) || imageBytes.isEmpty || kNoOnDeviceOcr) {
       return imageBytes;
     }
     File? tmp;
     try {
       tmp = await _writeTemp(tmpKey, imageBytes);
-      final recognized =
-          await _recognizer.processImage(InputImage.fromFilePath(tmp.path));
+      // A read that never answers (seen on the iOS simulator) must not freeze
+      // the repaint lane — every later photo waits behind it. A normal read
+      // takes well under a second; 45 s means something is stuck.
+      final recognized = await _recognizer
+          .processImage(InputImage.fromFilePath(tmp.path))
+          .timeout(const Duration(seconds: 45));
 
       final matches = _findPrintedPrices(recognized);
       if (matches.isEmpty) return imageBytes;
