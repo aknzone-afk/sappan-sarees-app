@@ -1,15 +1,17 @@
 Hello App Review team,
 
-Thank you for reviewing Sappan Sarees. Here is the information you asked for (a screen recording from a physical iPhone is attached to this reply).
+Thank you for reviewing Samppan Sarees. Here is the information you asked for.
 
 1. SCREEN RECORDING
-Attached: recorded on an iPhone running the latest iOS, starting at app launch. It shows sign-up, browsing the collections, opening a saree, choosing a colour, adding to the shopping bag, placing an order, viewing "My Orders", and deleting the account (My Orders > menu (⋮) > "Delete my account").
+Video (5 min, MP4): https://aknzone-afk.github.io/sappan-sarees-app/review/app-review-flow.mp4
+(player page: https://aknzone-afk.github.io/sappan-sarees-app/review/)
+Recorded on the iPhone simulator running iOS 26 with the same app version as the submitted build. It starts at app launch and shows sign-up, browsing the home page and collections, New In, opening a saree with CHOOSE COLOUR, adding it to the shopping bag, placing the order, the order in "My Orders", and deleting the account (My Orders > menu (⋮) > "Delete my account"). We can also provide a recording from a physical iPhone if you need one.
 
 2. PURPOSE AND AUDIENCE
-Sappan Sarees is the shopping app of a saree house. It lets individual customers anywhere in India browse our designer sarees (zari, thread embroidery, stone and sequin work, Banarasi and organza weaves, bandhej and more), see the price, and order even a single saree for delivery to their door. Audience: adult retail customers in India who buy sarees for themselves and their families.
+Samppan Sarees is the shopping app of a saree house. It lets individual customers anywhere in India browse our designer sarees (zari, thread embroidery, stone and sequin work, Banarasi and organza weaves, bandhej and more), see the price, and order even a single saree for delivery to their door. Audience: adult retail customers in India who buy sarees for themselves and their families.
 
 3. HOW TO USE IT (no demo account needed)
-- Open the app and fill the short sign-up form: name, mobile number, address and pincode. There is no password and no approval; any valid Indian mobile number and pincode works (e.g. name "App Review", mobile 9999999999, pincode 110001).
+- Open the app and fill the short sign-up form: name, mobile number, address and pincode. There is no password and no approval; any valid Indian mobile number and pincode works (e.g. name "App Review", mobile 9876543210, pincode 110001).
 - Browse the home page collections or "New In", open a saree, tap CHOOSE COLOUR, pick a colour and add it to the shopping bag.
 - Open the bag and tap PLACE ORDER, check the details and confirm. The order appears in "My Orders". Our team then contacts the customer to confirm and arrange payment and delivery outside the app; no payment is taken inside the app.
 - To delete the account: My Orders > menu (⋮) > "Delete my account". This removes the account and its data from our server.
@@ -33,4 +35,4 @@ There is no user-generated content in the app (customers cannot post anything vi
 
 Kind regards,
 Akshay Nahata
-Sappan Sarees
+Samppan Sarees
