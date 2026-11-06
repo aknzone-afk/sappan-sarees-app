@@ -6,6 +6,7 @@
 import 'package:catalog_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 
 void main() {
@@ -74,39 +75,42 @@ void main() {
       await idle(0.8);
     }
 
-    // 3. New In → a saree → CHOOSE COLOUR → tap the saree → DONE.
-    await tapIt(find.text('NEW IN').last, after: 6);
-    await tapIt(find.textContaining('CHOOSE COLOUR'), after: 5);
+    // Move between screens the way the bottom bar does (some screens have no
+    // bottom bar, so go through the app's own router).
+    Future<void> goTo(String route, {double after = 4}) async {
+      final ctx = tester.element(find.byType(Scaffold).last);
+      GoRouter.of(ctx).go(route);
+      await idle(after);
+    }
+
+    // 3. New In -> a saree -> CHOOSE COLOUR -> close the tip -> tap the saree -> DONE.
+    await tapIt(find.text('NEW IN').last, after: 8);
+    await tapIt(find.textContaining('CHOOSE COLOUR'), after: 4);
+    if (await waitFor(find.text('OK, start'), secs: 6)) {
+      await idle(2.5); // let the viewer read the tip
+      await tapIt(find.text('OK, start'), after: 2);
+    }
     final size = tester.view.physicalSize / tester.view.devicePixelRatio;
-    await tester.tapAt(Offset(size.width / 2, size.height * 0.45));
-    await idle(2.5);
+    await tester.tapAt(Offset(size.width / 2, size.height * 0.5));
+    await idle(3);
     await tapIt(find.text('DONE'), after: 3);
 
-    // 4. Shopping bag → PLACE ORDER → details → confirm.
-    final bagNav = find.text('BAG');
-    if (bagNav.evaluate().isEmpty) {
-      await tester.pageBack();
-      await idle(2);
-    }
-    await tapIt(find.text('BAG').last, after: 4);
-    await tapIt(find.textContaining('PLACE ORDER'), after: 5);
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -400));
+    // 4. Shopping bag -> PLACE ORDER -> details -> confirm.
+    await goTo('/');
+    await tapIt(find.text('BAG').last, after: 5);
+    await tapIt(find.textContaining('PLACE ORDER'), after: 6);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
     await idle(2);
     await tapIt(find.textContaining('PLACE ORDER ·'), after: 3);
-    await tapIt(find.text('YES, PLACE ORDER'), after: 10);
+    await tapIt(find.text('YES, PLACE ORDER'), after: 12);
     await idle(4);
 
-    // 5. My Orders → ⋮ → Delete my account.
-    if (find.text('ORDERS').evaluate().isEmpty) {
-      while (find.text('ORDERS').evaluate().isEmpty && Navigator.of(tester.element(find.byType(Scaffold).last)).canPop()) {
-        await tester.pageBack();
-        await idle(1.5);
-      }
-    }
-    await tapIt(find.text('ORDERS').last, after: 5);
+    // 5. My Orders -> menu -> Delete my account.
+    await goTo('/');
+    await tapIt(find.text('ORDERS').last, after: 6);
     await tapIt(find.byType(PopupMenuButton<String>), after: 2);
     await tapIt(find.text('Delete my account'), after: 3);
     await tapIt(find.text('Delete'), after: 8);
     await idle(4);
-  }, timeout: const Timeout(Duration(minutes: 12)));
+  }, timeout: const Timeout(Duration(minutes: 20)));
 }
