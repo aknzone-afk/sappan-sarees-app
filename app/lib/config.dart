@@ -197,3 +197,10 @@ const List<String> kHeroLines = [
 ];
 
 bool retailVisible(int? wholesale) => wholesale != null && wholesale >= kRetailMinWholesale;
+
+/// Samppan's own logo-free modelling photos (GitHub Pages of this repo).
+const String kModelBase = 'https://aknzone-afk.github.io/sappan-sarees-app';
+
+/// Opening a design shows its modelling photo for this long first, then the
+/// normal photo (B.B app 26-Oct). app-config.json "model_flash_ms"; 0 = off.
+int kModelFlashMs = 1000;

@@ -17,10 +17,12 @@ import '../services/drive_urls.dart';
 import '../services/photo_freshness.dart';
 import '../services/price_check.dart';
 import '../services/notification_service.dart' show kDailyUpdateFolder;
+import '../services/model_pics.dart';
 import '../widgets/bar_button.dart';
 import '../widgets/photo_card.dart';
 import '../widgets/filter_sheet.dart';
 import '../widgets/marquee_text.dart';
+import '../widgets/model_pic.dart';
 import '../widgets/photo_grid.dart';
 import '../widgets/photo_stack.dart';
 import '../widgets/prefetch_wrap.dart';
@@ -539,6 +541,10 @@ class _PhotoCardProxy extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Owner 26-Oct: the modelling photo flashes when this design is opened —
+    // fetch it while the tile is on screen so the flash is instant.
+    final model = modelPicsOf(ref.watch(modelPicsProvider).value, photo.designNumber);
+    if (model.isNotEmpty) warmModelPic(model.first);
     // Same tile as everywhere else: one DO SELECTION box, no round icons.
     return PhotoCard(
       photo: photo,

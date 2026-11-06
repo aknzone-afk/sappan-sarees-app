@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,8 +11,11 @@ import '../l10n.dart';
 
 import '../models/photo.dart';
 import '../providers/providers.dart';
+import '../config.dart' show kModelFlashMs;
 import '../widgets/bar_button.dart';
+import '../widgets/model_pic.dart';
 import '../widgets/pick_preview.dart';
+import '../services/model_pics.dart';
 import '../services/photo_freshness.dart';
 import '../services/picks_service.dart';
 import '../services/pieces_service.dart';
@@ -39,7 +41,32 @@ class _PickScreenState extends ConsumerState<PickScreen> {
   void initState() {
     super.initState();
     _s = ref.read(picksProvider)[widget.photoId] ?? const PickState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _guideOnce());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _guideOnce();
+      await _flashModel();
+    });
+  }
+
+  /// Owner 26-Oct (2): opening any design first shows its modelling photo for
+  /// about a second, then the normal photo. No modelling photo = straight to
+  /// the photo; a slow download never holds the customer (gives up quietly).
+  /// Length from app-config "model_flash_ms" (0 = off).
+  Future<void> _flashModel() async {
+    if (kModelFlashMs <= 0 || !mounted) return;
+    final design = _photo?.designNumber;
+    if (design == null) return;
+    Map<String, List<String>> all;
+    try {
+      all = await ref.read(modelPicsProvider.future).timeout(const Duration(seconds: 2));
+    } catch (_) {
+      return;
+    }
+    final pics = modelPicsOf(all, design);
+    if (pics.isEmpty || !mounted) return;
+    await showModelPic(context, pics,
+        autoClose: Duration(milliseconds: kModelFlashMs),
+        giveUpAfter: const Duration(milliseconds: 2500),
+        barrier: Colors.black);
   }
 
   /// First time only: a big, simple picture-guide of how to select.
@@ -735,6 +762,42 @@ class _PickScreenState extends ConsumerState<PickScreen> {
             ),
           ]),
                   ),
+                  // Owner 26-Oct: the modelling photo (12 X 18) of this design.
+                  Builder(builder: (context) {
+                    final pics = modelPicsOf(ref.watch(modelPicsProvider).value, photo.designNumber);
+                    if (pics.isEmpty) return const SizedBox.shrink();
+                    warmModelPic(pics.first); // first tap = instant
+                    // Thumbnail of the photo first, the words beside it; the
+                    // viewer closes 2.5 s after the photo is on screen.
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 6, 12, 4),
+                      child: Material(
+                        color: kMaroon,
+                        shape: const RoundedRectangleBorder(side: BorderSide(color: kGold, width: 0.8)),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => showModelPic(context, pics, autoClose: const Duration(milliseconds: 2500)),
+                          child: SizedBox(
+                            height: 52,
+                            child: Row(children: [
+                              const SizedBox(width: 8),
+                              ModelThumb(pics.first),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Text(t('VIEW ON MODEL', 'मॉडल पर देखें'),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: kPaper, fontSize: 13.5, fontWeight: FontWeight.w600, letterSpacing: 2.4)),
+                              ),
+                              const Icon(Icons.chevron_right_rounded, color: kGold),
+                              const SizedBox(width: 6),
+                            ]),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
                 ]);
               }),
             ),

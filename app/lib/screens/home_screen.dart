@@ -107,13 +107,15 @@ class _Wordmark extends StatelessWidget {
   Widget build(BuildContext context) {
     // "SAMPPAN" in couture serif; SAREES set small between gold rules.
     Widget rule() => Container(width: 16, height: 0.8, color: kGold);
-    return Column(mainAxisSize: MainAxisSize.min, children: [
+    // Scales down to fit between the menu and the search/bag icons on narrow
+    // phones — never "SAMPPA…".
+    return FittedBox(fit: BoxFit.scaleDown, child: Column(mainAxisSize: MainAxisSize.min, children: [
       const Padding(
         // trailing tracking would push the word off-centre
-        padding: EdgeInsets.only(left: 10),
+        padding: EdgeInsets.only(left: 8),
         child: Text('SAMPPAN',
             style: TextStyle(
-                fontFamily: kSerif, fontSize: 31, fontWeight: FontWeight.w600, letterSpacing: 10, height: 1.0, color: kMaroon)),
+                fontFamily: kSerif, fontSize: 29, fontWeight: FontWeight.w600, letterSpacing: 8, height: 1.0, color: kMaroon)),
       ),
       const SizedBox(height: 5),
       Row(mainAxisSize: MainAxisSize.min, children: [
@@ -125,7 +127,7 @@ class _Wordmark extends StatelessWidget {
         ),
         rule(),
       ]),
-    ]);
+    ]));
   }
 }
 
