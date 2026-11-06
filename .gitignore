@@ -19,3 +19,5 @@ app/android/.gradle/
 app/flutter_0*.log
 cloud/functions/node_modules/
 google-services.json
+tools/model_clean/review/
+tools/model_clean/*.log

@@ -3,7 +3,7 @@ Hello App Review team,
 Thank you for reviewing Samppan Sarees. Here is the information you asked for.
 
 1. SCREEN RECORDING
-Video (5 min, MP4): https://aknzone-afk.github.io/sappan-sarees-app/review/app-review-flow.mp4
+Video (4 min, MP4): https://aknzone-afk.github.io/sappan-sarees-app/review/app-review-flow.mp4
 (player page: https://aknzone-afk.github.io/sappan-sarees-app/review/)
 Recorded on the iPhone simulator running iOS 26 with the same app version as the submitted build. It starts at app launch and shows sign-up, browsing the home page and collections, New In, opening a saree with CHOOSE COLOUR, adding it to the shopping bag, placing the order, the order in "My Orders", and deleting the account (My Orders > menu (⋮) > "Delete my account"). We can also provide a recording from a physical iPhone if you need one.
 

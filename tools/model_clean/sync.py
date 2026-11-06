@@ -28,6 +28,12 @@ SRC = "https://aknzone-afk.github.io/akn-zone-data/app/"
 OUT_DIR = os.path.join(REPO, "docs", "model")
 OUT_JSON = os.path.join(REPO, "docs", "model.json")
 STATE = os.path.join(HERE, "state.json")
+# photos a person looked at and found not clean enough — never published
+BLOCK = os.path.join(HERE, "blocklist.txt")
+# cleaned copies the automatic stroke check was unsure about; a person looked
+# at them and approved these names (they are then published like the rest)
+ALLOW = os.path.join(HERE, "approved.txt")
+REVIEW = os.path.join(HERE, "review")
 
 
 def fetch(url):
@@ -51,10 +57,19 @@ def main(push=False):
     m = src.get("m") or {}
     out = {}
     done = skipped = failed = 0
+    os.makedirs(REVIEW, exist_ok=True)
+    approved = set()
+    if os.path.exists(ALLOW):
+        approved = {l.strip() for l in open(ALLOW, encoding="utf-8") if l.strip() and not l.startswith("#")}
+    blocked = set()
+    if os.path.exists(BLOCK):
+        blocked = {l.strip() for l in open(BLOCK, encoding="utf-8") if l.strip() and not l.startswith("#")}
     for key, files in m.items():
         good = []
         for f in files or []:
             name = os.path.basename(f)
+            if name in blocked:
+                continue
             dst = os.path.join(OUT_DIR, name)
             st = state.get(f)
             try:
@@ -74,18 +89,27 @@ def main(push=False):
                     good.append("model/" + name)
                 skipped += 1
                 continue
-            img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-            ok = False
-            res = None
-            if img is not None:
-                try:
-                    res, _ = clean.clean_img(img)
-                except clean.OcrFailed:
-                    print("OCR failed, try next run:", f)
-                    continue  # no state → retried next run
-                if res is not None and not still_branded(res):
-                    cv2.imwrite(dst, res, [cv2.IMWRITE_JPEG_QUALITY, 88])
+            # each photo in its own process: a native crash in the image
+            # libraries (low-memory PC) only loses that one photo, this run
+            tmp_in = os.path.join(REVIEW, "_in.jpg")
+            open(tmp_in, "wb").write(data)
+            rv = os.path.join(REVIEW, name)
+            try:
+                code = subprocess.run([sys.executable, os.path.join(HERE, "clean.py"), tmp_in, dst,
+                                       "--design", key, "--review", rv],
+                                      capture_output=True, text=True, timeout=400).returncode
+            except subprocess.TimeoutExpired:
+                code = -1
+            ok = code == 0
+            if code == 4:
+                if name in approved:
+                    os.replace(rv, dst)
                     ok = True
+                else:
+                    print("for review:", f)
+            elif code not in (0, 2, 4):
+                print("crashed/ocr fail, try next run:", f, code)
+                continue  # no state → tried again next run
             if not ok:
                 failed += 1
                 print("left out (could not clean):", f)
