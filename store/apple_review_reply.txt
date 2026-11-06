@@ -1,0 +1,36 @@
+Hello App Review team,
+
+Thank you for reviewing Sappan Sarees. Here is the information you asked for (a screen recording from a physical iPhone is attached to this reply).
+
+1. SCREEN RECORDING
+Attached: recorded on an iPhone running the latest iOS, starting at app launch. It shows sign-up, browsing the collections, opening a saree, choosing a colour, adding to the shopping bag, placing an order, viewing "My Orders", and deleting the account (My Orders > menu (⋮) > "Delete my account").
+
+2. PURPOSE AND AUDIENCE
+Sappan Sarees is the shopping app of a saree house. It lets individual customers anywhere in India browse our designer sarees (zari, thread embroidery, stone and sequin work, Banarasi and organza weaves, bandhej and more), see the price, and order even a single saree for delivery to their door. Audience: adult retail customers in India who buy sarees for themselves and their families.
+
+3. HOW TO USE IT (no demo account needed)
+- Open the app and fill the short sign-up form: name, mobile number, address and pincode. There is no password and no approval; any valid Indian mobile number and pincode works (e.g. name "App Review", mobile 9999999999, pincode 110001).
+- Browse the home page collections or "New In", open a saree, tap CHOOSE COLOUR, pick a colour and add it to the shopping bag.
+- Open the bag and tap PLACE ORDER, check the details and confirm. The order appears in "My Orders". Our team then contacts the customer to confirm and arrange payment and delivery outside the app; no payment is taken inside the app.
+- To delete the account: My Orders > menu (⋮) > "Delete my account". This removes the account and its data from our server.
+
+4. EXTERNAL SERVICES
+- Google Firebase (Cloud Functions, Firestore, Cloud Storage) – our backend for sign-up, orders and account deletion.
+- Google Drive – hosts the catalogue photos.
+- GitHub Pages – hosts the price list, support page and privacy policy.
+- Telegram Bot API – forwards each new order to our shop's private order group so staff can process it.
+- Google ML Kit text recognition (on-device) – reads the price printed on catalogue photos so the app can show the correct retail price.
+- India Post pincode lookup (api.postalpincode.in) – fills city and state from the pincode during sign-up.
+There is no in-app payment, no AI content generation, no advertising and no tracking.
+
+5. REGIONAL DIFFERENCES
+The app works the same in every region. It is intended for customers in India, because we only deliver within India (prices are in Indian rupees and the sign-up asks for an Indian mobile number and pincode).
+
+6. REGULATED INDUSTRY / THIRD-PARTY MATERIAL
+Not applicable. We sell our own sarees; all product photos and designs belong to us. The app does not offer financial, medical, gambling or other regulated services.
+
+There is no user-generated content in the app (customers cannot post anything visible to others).
+
+Kind regards,
+Akshay Nahata
+Sappan Sarees

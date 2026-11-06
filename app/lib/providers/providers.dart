@@ -206,6 +206,9 @@ final lastKnownTotalsProvider = Provider<({int folders, int photos})>((ref) {
 /// that updates the cache without blocking the UI.
 final FutureProvider<CatalogResult> catalogProvider =
     FutureProvider<CatalogResult>((ref) async {
+  // Riverpod forbids a provider writing other providers while it is still
+  // being created (assertion in debug builds) — let creation finish first.
+  await Future<void>.delayed(Duration.zero);
   ref.read(scrapeProgressProvider.notifier).state = ScrapeProgress.empty;
   ref.read(discoveredPhotosProvider.notifier).state = const [];
 
