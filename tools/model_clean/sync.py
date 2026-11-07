@@ -84,6 +84,9 @@ def main(push=False):
                 # written by an earlier run that stopped before saving state —
                 # files are only ever written after passing the logo check
                 st = state[f] = {"sig": sig, "ok": True}
+            if st and st.get("sig") == sig and not st.get("ok") and name in approved and os.path.exists(os.path.join(REVIEW, name)):
+                os.replace(os.path.join(REVIEW, name), dst)  # approved since the last run
+                st["ok"] = True
             if st and st.get("sig") == sig:
                 if st.get("ok") and os.path.exists(dst):
                     good.append("model/" + name)
@@ -101,6 +104,12 @@ def main(push=False):
             except subprocess.TimeoutExpired:
                 code = -1
             ok = code == 0
+            if ok and name not in approved:
+                # owner 7-Nov: nothing new goes live unseen — the automatic
+                # checks miss small smudges; a person approves it first
+                os.replace(dst, rv)
+                ok = False
+                code = 4
             if code == 4:
                 if name in approved:
                     os.replace(rv, dst)
