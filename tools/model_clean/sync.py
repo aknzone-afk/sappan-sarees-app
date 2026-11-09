@@ -10,6 +10,7 @@ State: tools/model_clean/state.json (source size+etag per file → no re-work).
 
 Usage: python sync.py [--push]
 """
+import hashlib
 import json
 import os
 import subprocess
@@ -79,7 +80,11 @@ def main(push=False):
                 if st and st.get("ok") and os.path.exists(dst):
                     good.append("model/" + name)
                 continue
-            sig = f"{len(data)}:{etag}"
+            # the photo's own bytes decide "changed" — B.B's site gets new
+            # ETags on every republish (9-Nov: every photo looked new)
+            sig = "sha1:" + hashlib.sha1(data).hexdigest()
+            if st and not str(st.get("sig", "")).startswith("sha1:") and str(st.get("sig", "")).split(":")[0] == str(len(data)):
+                st["sig"] = sig  # old size:etag entry for the same file — keep its decision
             if st is None and os.path.exists(dst):
                 # written by an earlier run that stopped before saving state —
                 # files are only ever written after passing the logo check
