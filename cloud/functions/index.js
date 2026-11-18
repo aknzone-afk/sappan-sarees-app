@@ -325,7 +325,8 @@ async function deliver(ref) {
 }
 
 /** Every 5 min: orders the phone never finished (10+ min old) or held for the group. */
-exports.spSweep = onSchedule({ region: REGION, schedule: "every 5 minutes", secrets: [TG_TOKEN], timeoutSeconds: 540, memory: "512MiB" }, async () => {
+// 18-Nov: half a vCPU, one run at a time (Mumbai may use only 20 vCPU in total).
+exports.spSweep = onSchedule({ region: REGION, schedule: "every 5 minutes", secrets: [TG_TOKEN], timeoutSeconds: 540, memory: "512MiB", cpu: 0.5, concurrency: 1, maxInstances: 1 }, async () => {
   const snap = await db().collection("sappan_orders").where("status", "==", "placed").limit(50).get();
   for (const d of snap.docs) {
     const o = d.data();
