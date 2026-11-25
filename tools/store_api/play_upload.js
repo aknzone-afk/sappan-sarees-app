@@ -2,7 +2,7 @@ const fs = require('fs'), https = require('https');
 const { call, token, PKG } = require('./play.js');
 const AAB = 'C:/Users/4001C/sappan-repo/app/build/app/outputs/bundle/release/app-release.aab';
 const H = 'androidpublisher.googleapis.com', base = `/androidpublisher/v3/applications/${PKG}`;
-const notes = [{ language: 'en-US', text: 'Now Samppan Sarees. View any saree on a model; faster first launch.' }];
+const notes = [{ language: 'en-US', text: 'Browse every saree without signing up; your account is made when you place your first order.' }];
 const ren = s => String(s || '').replace(/\bSappan\b/g, 'Samppan').replace(/\bSAPPAN\b/g, 'SAMPPAN');
 function upload(t, editId) {
   const data = fs.readFileSync(AAB);

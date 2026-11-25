@@ -97,6 +97,11 @@ void main() {
     await typeInto('Your Name *', 'App Review');
     await typeInto('Mobile No. *', '9876543210');
     await typeInto('Full Address *', '12 Demo Street, Connaught Place, New Delhi');
+    FocusManager.instance.primaryFocus?.unfocus();
+    await idle(1.5);
+    // the pincode box sits below the screen edge — scroll it into view first
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -350));
+    await idle(1.5);
     await typeInto('Pincode *', '110001');
     FocusManager.instance.primaryFocus?.unfocus();
     await idle(3);
