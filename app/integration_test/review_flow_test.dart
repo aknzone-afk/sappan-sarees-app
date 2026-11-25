@@ -39,13 +39,24 @@ void main() {
     }
 
     Future<void> typeInto(String label, String text) async {
-      final f = find.widgetWithText(TextFormField, label);
-      if (!await waitFor(f)) return;
-      await tester.ensureVisible(f);
-      await tester.tap(f, warnIfMissed: false);
-      await idle(0.4);
-      await tester.enterText(f, text);
-      await idle(1.0);
+      // The simulator keyboard shows a one-time "slide to type" tip that
+      // steals focus; close it, type, and re-type if the box came out empty.
+      for (var attempt = 0; attempt < 3; attempt++) {
+        final f = find.widgetWithText(TextFormField, label);
+        if (!await waitFor(f)) return;
+        await tester.ensureVisible(f);
+        await tester.tap(f, warnIfMissed: false);
+        await idle(0.6);
+        final tip = find.text('Continue');
+        if (tip.evaluate().isNotEmpty) {
+          await tester.tap(tip.first, warnIfMissed: false);
+          await idle(1);
+        }
+        await tester.enterText(f, text);
+        await idle(1.0);
+        final typed = find.descendant(of: f, matching: find.text(text));
+        if (typed.evaluate().isNotEmpty) return;
+      }
     }
 
     app.main();

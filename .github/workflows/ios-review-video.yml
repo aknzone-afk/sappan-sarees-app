@@ -59,16 +59,8 @@ jobs:
               if ph: print(ph[-1]["udid"]); break')
           echo "udid=$UDID" >> $GITHUB_OUTPUT
           xcrun simctl list devices | grep "$UDID"
-          # no "slide to type" intro popup and no auto-correct: they steal focus
-          # mid-typing and the form loses keystrokes
-          defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool false || true
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
-          for k in DidShowContinuousPathIntroduction KeyboardDidShowProductivityTutorial DidShowGestureKeyboardIntroduction; do
-            xcrun simctl spawn "$UDID" defaults write com.apple.keyboard.preferences $k -bool true || true
-          done
-          xcrun simctl spawn "$UDID" defaults write com.apple.Preferences KeyboardAutocorrection -bool false || true
-          xcrun simctl spawn "$UDID" defaults write com.apple.Preferences KeyboardPrediction -bool false || true
           xcrun simctl status_bar "$UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
 
       - name: Build the app for the simulator first (keeps the recording short)
