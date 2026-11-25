@@ -79,7 +79,12 @@ jobs:
           sleep 2
           kill -INT $REC
           wait $REC || true
-          ls -la ../out
+          # crash reports + the app's own log lines, to see why it left the screen
+          mkdir -p ../out/crash
+          cp ~/Library/Logs/DiagnosticReports/*Runner* ../out/crash/ 2>/dev/null || true
+          cp ~/Library/Logs/DiagnosticReports/*.ips ../out/crash/ 2>/dev/null || true
+          xcrun simctl spawn "$UDID" log show --last 40m --style compact --predicate 'process == "Runner" OR eventMessage CONTAINS "Runner" OR eventMessage CONTAINS "jetsam" OR eventMessage CONTAINS "com.sappansarees"' > ../out/crash/sim_log.txt 2>&1 || true
+          ls -la ../out ../out/crash
 
       - uses: actions/upload-artifact@v7
         if: always()
