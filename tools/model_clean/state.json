@@ -1629,7 +1629,7 @@
 },
 "model/5812.jpg": {
 "sig": "sha1:537c14ebeca5a2c4594551a41443e32e4aaaee2f",
-"ok": false
+"ok": true
 },
 "model/6630.jpg": {
 "sig": "sha1:5a46aec328504cf818414fba42cd95407d8d5b2c",
@@ -1673,10 +1673,14 @@
 },
 "model/7474.jpg": {
 "sig": "sha1:d20d6ef16f795833131558aa15a22f21dd082ff8",
-"ok": false
+"ok": true
 },
 "model/7596.jpg": {
 "sig": "sha1:883f474f83be25c6c93560423f38771fe8b67912",
+"ok": false
+},
+"model/7454.jpg": {
+"sig": "sha1:873cbf57fcef016b3b216a39bd40c37be4ae9030",
 "ok": false
 }
 }
