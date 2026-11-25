@@ -490,7 +490,29 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
       mobile: OrderService.normalizeIndianMobile(_mobile.text) ?? _mobile.text.trim(),
     );
 
+    // Apple 5.1.1(v): a guest's account is made here, at the first order,
+    // from the details just typed (same record the old sign-up screen made).
+    await _ensureAccount(customer);
     await _send(photos, customer);
+  }
+
+  Future<void> _ensureAccount(CustomerDetails c) async {
+    try {
+      final prefs = ref.read(sharedPreferencesProvider);
+      final a = AccountService.saved(prefs);
+      if (a != null && '${a['status'] ?? ''}' == 'approved') return;
+      final cust = <String, dynamic>{
+        'name': c.billName,
+        'billName': c.billName,
+        'address': c.address,
+        'pincode': c.pincode,
+        'city': _pinInfo?.district ?? '',
+        'state': _pinInfo?.state ?? '',
+        'country': 'India',
+      };
+      await AccountService.retailSignup(c.mobile, cust);
+      await AccountService.approve(prefs, {'mobile': c.mobile, 'india': true, 'kind': 'retail', 'cust': cust});
+    } catch (_) {/* never block an order */}
   }
 
   CustomerDetails _oldCustomer() {

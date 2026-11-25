@@ -597,6 +597,14 @@ void _showShopInfo(BuildContext context) {
             onPressed: () => openUrl(kPrivacyUrl),
             child: const Text('PRIVACY POLICY', style: TextStyle(fontSize: 11, letterSpacing: 1.6)),
           ),
+          // Apple 5.1.1(v): account (and its deletion) one tap from the menu
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.push('/orders');
+            },
+            child: const Text('MY ACCOUNT & DELETE ACCOUNT', style: TextStyle(fontSize: 11, letterSpacing: 1.6)),
+          ),
         ]),
       ),
       actions: [

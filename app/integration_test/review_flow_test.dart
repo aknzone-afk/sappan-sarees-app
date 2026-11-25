@@ -52,16 +52,7 @@ void main() {
     await idle(4); // launch + splash
 
     // 1. Sign-up (no password, no approval).
-    await waitFor(find.text('START SHOPPING'), secs: 40);
-    await idle(2);
-    await typeInto('Your Name *', 'App Review');
-    await typeInto('Mobile No. *', '9876543210');
-    await typeInto('Full Address *', '12 Demo Street, Connaught Place, New Delhi');
-    await typeInto('Pincode *', '110001');
-    FocusManager.instance.primaryFocus?.unfocus();
-    await idle(2.5);
-    await tapIt(find.text('START SHOPPING'), after: 4);
-
+    // 1. No sign-up wall: a guest goes straight to the catalogue.
     // 2. Browse the storefront (catalogue loads from the cloud).
     await waitFor(find.text('NEW IN'), secs: 60);
     await idle(6);
@@ -102,17 +93,23 @@ void main() {
     await goTo('/');
     await tapIt(find.text('BAG').last, after: 5);
     await tapIt(find.textContaining('PLACE ORDER'), after: 6);
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -500));
-    await idle(2);
+    // the account is made here, from the order form, at the first order
+    await typeInto('Your Name *', 'App Review');
+    await typeInto('Mobile No. *', '9876543210');
+    await typeInto('Full Address *', '12 Demo Street, Connaught Place, New Delhi');
+    await typeInto('Pincode *', '110001');
+    FocusManager.instance.primaryFocus?.unfocus();
+    await idle(3);
     await tapIt(find.textContaining('PLACE ORDER ·'), after: 3);
     await tapIt(find.text('YES, PLACE ORDER'), after: 12);
     await idle(4);
 
     // 5. My Orders -> menu -> Delete my account.
     await goTo('/');
-    await tapIt(find.text('ORDERS').last, after: 6);
-    await tapIt(find.byType(PopupMenuButton<String>), after: 2);
-    await tapIt(find.text('Delete my account'), after: 3);
+    // the menu's "MY ACCOUNT & DELETE ACCOUNT" opens My Orders with the account panel
+    await tapIt(find.byIcon(Icons.menu_rounded), after: 3);
+    await tapIt(find.text('MY ACCOUNT & DELETE ACCOUNT'), after: 5);
+    await tapIt(find.text('DELETE MY ACCOUNT'), after: 3);
     await tapIt(find.text('Delete'), after: 8);
     await idle(4);
   }, timeout: const Timeout(Duration(minutes: 20)));

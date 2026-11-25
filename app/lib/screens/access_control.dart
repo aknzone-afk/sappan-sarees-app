@@ -101,7 +101,10 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
       final prefs = await SharedPreferences.getInstance();
       final a = AccountService.saved(prefs);
       final status = '${a?['status'] ?? ''}';
-      if (a == null || status.isEmpty) return _Gate.onboarding;
+      // Apple 5.1.1(v), 21-Nov-2026: browsing needs no account. A guest goes
+      // straight to the catalogue; the account is made from the order form's
+      // details when the first order is placed (order_screen.dart).
+      if (a == null || status.isEmpty) return null;
       if (status == 'approved') {
         // ignore: discarded_futures
         _recheckAccount(prefs, a);
@@ -129,7 +132,7 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
         }
         return status == 'blocked' ? _Gate.accountRemoved : _Gate.accountDeclined;
       }
-      return _Gate.onboarding; // no account yet → retail sign-up
+      return null; // unknown status → browse as a guest
     } catch (_) {
       return null; // never lock a customer out because of an app error
     }

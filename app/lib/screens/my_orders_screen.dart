@@ -178,6 +178,38 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
     refreshAccessGate();
   }
 
+  Widget? _accountPanel() {
+    final a = AccountService.saved(ref.read(sharedPreferencesProvider));
+    if (a == null) return null;
+    final cust = a['cust'] is Map ? a['cust'] as Map : const {};
+    final name = '${cust['name'] ?? cust['billName'] ?? ''}'.trim();
+    final mobile = '${a['mobile'] ?? ''}';
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
+        decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0x33B08A45)))),
+        child: Row(children: [
+          const Icon(Icons.person_outline_rounded, size: 20, color: Color(0xFF5E0B1F)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              [if (name.isNotEmpty) name, if (mobile.isNotEmpty) '+91 $mobile'].join(' · '),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+          TextButton(
+            onPressed: _deleteAccount,
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFFB3261E)),
+            child: const Text('DELETE MY ACCOUNT', style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.6)),
+          ),
+        ]),
+      ),
+    );
+  }
+
   Future<void> _retry(String number) async {
     setState(() => _busy = number);
     final o = await OrderService.retryOne(
@@ -211,6 +243,8 @@ class _MyOrdersScreenState extends ConsumerState<MyOrdersScreen> {
           ],
         ),
       ]),
+      // Apple 5.1.1(v): account deletion in plain sight, not only in the ⋮ menu.
+      bottomNavigationBar: _accountPanel(),
       body: orders.isEmpty
           ? Center(
               child: Padding(
