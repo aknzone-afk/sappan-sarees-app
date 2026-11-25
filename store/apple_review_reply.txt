@@ -10,7 +10,7 @@ CHANGES IN BUILD 8 (Guideline 5.1.1(v), review of 21 Nov 2026)
 1. SCREEN RECORDING
 Video (MP4): https://aknzone-afk.github.io/sappan-sarees-app/review/app-review-flow.mp4
 (player page: https://aknzone-afk.github.io/sappan-sarees-app/review/)
-Recorded on the iPhone simulator (iOS 26) with build 8. It starts at app launch and shows browsing without an account, opening a saree with CHOOSE COLOUR, the shopping bag, placing an order (which creates the account from the delivery details; in the recording the order form is pre-filled because the simulator keyboard drops keystrokes), then ☰ > "MY ACCOUNT & DELETE ACCOUNT" > "DELETE MY ACCOUNT" > confirm, and the app back at the catalogue as a guest. We can provide a recording from a physical iPhone if needed.
+Recorded on the iPhone simulator (iOS 26) with build 8. It starts at app launch and shows browsing without an account, opening a saree with CHOOSE COLOUR, the shopping bag, placing an order (which creates the account from the delivery details typed on the order form), then ☰ > "MY ACCOUNT & DELETE ACCOUNT" > "DELETE MY ACCOUNT" > confirm, and the app back at the catalogue as a guest. We can provide a recording from a physical iPhone if needed.
 
 2. PURPOSE AND AUDIENCE
 Samppan Sarees is the shopping app of a saree house. It lets individual customers anywhere in India browse our designer sarees (zari, thread embroidery, stone and sequin work, Banarasi and organza weaves, bandhej and more), see the price, and order even a single saree for delivery to their door. Audience: adult retail customers in India who buy sarees for themselves and their families.
