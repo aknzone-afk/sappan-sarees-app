@@ -7,7 +7,10 @@ import 'package:catalog_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:catalog_app/models/order.dart';
+import 'package:catalog_app/services/order_service.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +51,12 @@ void main() {
       await idle(1.0);
     }
 
+    // delivery details only (no account): the order form fills itself
+    final prefs = await SharedPreferences.getInstance();
+    await OrderService.saveCustomer(prefs, CustomerDetails(
+      kind: 'retail', country: 'India', billName: 'App Review',
+      address: '12 Demo Street, Connaught Place, New Delhi', bookingPlace: 'Central Delhi',
+      pincode: '110001', mobile: '9876543210'));
     app.main();
     await idle(4); // launch + splash
 
@@ -93,18 +102,12 @@ void main() {
     await goTo('/');
     await tapIt(find.text('BAG').last, after: 5);
     await tapIt(find.textContaining('PLACE ORDER'), after: 6);
-    // the account is made here, from the order form, at the first order
-    await typeInto('Your Name *', 'App Review');
-    await typeInto('Mobile No. *', '9876543210');
-    await typeInto('Full Address *', '12 Demo Street, Connaught Place, New Delhi');
-    FocusManager.instance.primaryFocus?.unfocus();
-    await idle(1.5);
-    // the pincode box sits below the screen edge — scroll it into view first
+    // the order form shows the delivery details (pre-filled for this recording:
+    // the simulator keyboard drops keystrokes); the ACCOUNT is made only now,
+    // when this order is placed
+    await idle(4);
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -350));
-    await idle(1.5);
-    await typeInto('Pincode *', '110001');
-    FocusManager.instance.primaryFocus?.unfocus();
-    await idle(3);
+    await idle(2);
     await tapIt(find.textContaining('PLACE ORDER ·'), after: 3);
     await tapIt(find.text('YES, PLACE ORDER'), after: 12);
     await idle(4);
