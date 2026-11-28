@@ -1701,7 +1701,7 @@
 },
 "model/6500.jpg": {
 "sig": "sha1:eae95d0177593afe632000e85e82ca60be2fb825",
-"ok": false
+"ok": true
 },
 "model/6665-A.jpg": {
 "sig": "sha1:a9de19ee0bcca7379899c9674eef39fcd1d0f5c3",
@@ -1709,7 +1709,7 @@
 },
 "model/6665-B.jpg": {
 "sig": "sha1:7aec959779aab1f15b6c21c8a789c18277cd3afc",
-"ok": false
+"ok": true
 },
 "model/6666-A.jpg": {
 "sig": "sha1:e3be0f03bb90f716630544ec2b9c6a6d80bd5657",
@@ -1717,15 +1717,15 @@
 },
 "model/6666-B.jpg": {
 "sig": "sha1:7f48823de312c4f13d0a14fa844bf80550064e93",
-"ok": false
+"ok": true
 },
 "model/6729.jpg": {
 "sig": "sha1:64dfee9773366576c7519d78fba60ff4803277fa",
-"ok": false
+"ok": true
 },
 "model/6729-A.jpg": {
 "sig": "sha1:a80845c4c07173d0dd40f4eced96786ba3242029",
-"ok": false
+"ok": true
 },
 "model/6729-B.jpg": {
 "sig": "sha1:447eb7ded4c3f948a204bdff9d3958e6159d737a",
